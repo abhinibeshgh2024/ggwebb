@@ -183,3 +183,42 @@ footer{
     justify-content: center;
   }
 }
+
+/* ================= SEARCH BAR ================= */
+#webbSearchContainer{
+  width: min(600px, 90%);
+  margin: 70px auto;
+  position: relative;
+}
+
+#webbSearchInput{
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 50px;
+  border: none;
+  font-size: 16px;
+  outline: none;
+}
+
+/* SEARCH RESULTS */
+#webbSearchResults{
+  position: absolute;
+  top: 55px;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #8e0a01;
+  border-radius: 8px;
+  display: none;
+  z-index: 1000;
+}
+
+#webbSearchResults div{
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+#webbSearchResults div:hover{
+  background-color: #333;
+}
+
