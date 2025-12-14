@@ -1,0 +1,219 @@
+/* General */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #050000;
+}
+
+/* Top bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: black; 
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+    min-height: fit-content;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    min-width: min-content;
+}
+
+.search-container {
+    position: relative;
+}
+
+#ecsys-search {
+    padding: 8px 12px;
+    width: 250px;
+    border-radius: 20px;
+    border: 1px solid #ec0f0f;
+    box-shadow: 0 8px 20px rgba(224, 253, 57, 0.753);
+}
+
+#search-suggestions {
+    position: absolute;
+    top: 38px;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+    border-radius: 5px;
+}
+
+/* Boxed Rounded Navbar */
+.ecsys-navbar {
+    background: none;
+    backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    position: sticky;
+    top: 70px;
+    z-index: 999;
+    box-shadow: 0 8px 20px blue;
+    border-radius: 25px;
+    margin: 10px auto;
+    padding: 10px 20px;
+    max-width: 900px;
+     animation: fadeIn 1s ease-in-out;
+}
+ @keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+ }
+
+.ecsys-navbar ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+    gap: 20px;
+    color: white;
+    text-decoration: none;
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ecsys-navbar li {
+    padding: 12px 25px;
+    cursor: pointer;
+    position: relative;
+    font-weight: 500;
+    color: white;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+
+.ecsys-navbar li:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 15px;
+    transform: scale(1.05);
+    color: #f7f4f4;
+}
+
+.ecsys-navbar li::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #007bff;
+    left: 0;
+    bottom: 5px;
+    transition: width 0.3s ease;
+}
+
+/* Main content */
+.ecsys-main {
+    justify-content: left;
+    text-align: center;
+    transition: all 0.8s ease-out;}
+     @keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }}
+
+
+/* Modules Section */
+.modules-section {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 40px 20px;
+     transition: all 0.8s ease-out;
+    
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }}
+.module-card {
+    display: flex;
+    background: rgba(8, 0, 0, 0.945);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(3, 107, 20, 0.596);
+    overflow: hidden;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.8s ease-out;
+    color: #ccc;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+}
+
+.module-card.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.module-card img {
+    width: 200px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 20px 0 0 20px;
+}
+
+.module-description {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    text-align: left;
+}
+
+.module-description h2 {
+    margin: 0 0 10px 0;
+    font-size: 22px;
+    justify-content: right;
+    text-align: left;
+}
+
+.module-description p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+    justify-content: right;
+    text-align: left;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ecsys-navbar ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .ecsys-navbar {
+        top: 100px;
+        margin: 10px 10px;
+        max-width: 90%;
+    }
+    #ecsys-search {
+        width: 180px;
+    }
+    .module-card {
+        flex-direction: column-reverse;
+    }
+    .module-card img {
+        width: 100%;
+        border-radius: 20px 20px 0 0;
+    }
+}
+a
+{
+    text-decoration: none;
+    color: white;
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}

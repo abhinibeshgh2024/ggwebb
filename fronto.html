@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fronto Editor</title>
+    <link rel="stylesheet" href="Fronto.css">
+</head>
+<body>
+
+<header class="main-header">
+    <h1>FRONTO CODE EDITOR</h1>
+    <div class="header-right">
+        <button id="themeToggle">Light</button>
+        <button id="menuBtn" class="menu-btn">➤</button>
+    </div>
+</header>
+
+
+
+<div id="sideMenu" class="side-menu">
+    <div class="menu-header">
+        <h2>Demo Snippets</h2>
+        <input type="text" id="searchDemo" placeholder="Search..." />
+    </div>
+    <div id="demoList" class="demo-list"></div>
+    <div id="closeMenuBar" class="close-menu-bar">×</div>
+</div>
+
+<div class="container">
+
+    <div class="editor-area">
+        <div class="editor-block">
+            <h3>HTML</h3>
+            <textarea id="htmlCode"></textarea>
+        </div>
+
+        <div class="editor-block">
+            <h3>CSS</h3>
+            <textarea id="cssCode"></textarea>
+        </div>
+
+        <div class="editor-block">
+            <h3>JavaScript</h3>
+            <textarea id="jsCode"></textarea>
+        </div>
+    </div>
+
+    <button id="runBtn" class="run-btn">RUN</button>
+
+    <iframe id="outputFrame"></iframe>
+</div>
+
+<script src="Fronto.js"></script>
+</body>
+</html>
