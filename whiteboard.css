@@ -3,16 +3,27 @@
   font-family: Arial, sans-serif;
 }
 
-body {
-  margin: 0;
+body.light {
   background: #f4f4f4;
+  color: #000;
+}
+
+body.dark {
+  background: #121212;
+  color: #fff;
 }
 
 header {
-  padding: 10px;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
   background: #1a1a1a;
   color: white;
+}
+
+header button {
+  padding: 6px 10px;
 }
 
 .toolbar {
@@ -20,31 +31,47 @@ header {
   flex-wrap: wrap;
   gap: 8px;
   padding: 10px;
-  background: #ffffff;
-  border-bottom: 1px solid #ccc;
+  background: #eaeaea;
+}
+
+body.dark .toolbar {
+  background: #1e1e1e;
 }
 
 .toolbar button,
 .toolbar input,
 .upload-btn {
   padding: 6px 10px;
-  border: 1px solid #ccc;
-  background: #eee;
-  cursor: pointer;
+  border: 1px solid #aaa;
   border-radius: 4px;
-}
-
-.upload-btn {
-  position: relative;
+  cursor: pointer;
 }
 
 .board-container {
   width: 100%;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 110px);
   overflow: auto;
   background: white;
 }
 
+body.dark .board-container {
+  background: #000;
+}
+
 canvas {
-  background: white;
+  background: transparent;
+}
+
+.text-box, .img-box {
+  position: absolute;
+  min-width: 100px;
+  min-height: 30px;
+  border: 1px dashed #888;
+  padding: 5px;
+  cursor: move;
+  background: transparent;
+}
+
+.text-box[contenteditable="true"] {
+  outline: none;
 }
