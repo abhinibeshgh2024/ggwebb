@@ -2,30 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Whiteboard</title>
+  <title>Professional Whiteboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="whiteboard.css">
 </head>
-<body>
+<body class="light">
 
 <header>
   <h1>🧠 Whiteboard</h1>
+  <button onclick="toggleMode()">🌙 / ☀</button>
 </header>
 
 <div class="toolbar">
-  <button onclick="setTool('pen')">✏ Pen</button>
-  <button onclick="setTool('eraser')">🧽 Eraser</button>
-  <button onclick="setTool('text')">🔤 Text</button>
+  <button onclick="setTool('pen')">Pen</button>
+  <button onclick="setTool('marker')">Marker</button>
+  <button onclick="setTool('highlighter')">Highlighter</button>
+  <button onclick="setTool('eraser')">Eraser</button>
+  <button onclick="setTool('text')">Text</button>
+
   <input type="color" id="colorPicker">
   <input type="range" id="sizePicker" min="1" max="20">
+
   <label class="upload-btn">
-    🖼 Image
+    Image
     <input type="file" hidden onchange="addImage(event)">
   </label>
-  <button onclick="clearBoard()">🗑 Clear</button>
+
+  <button onclick="clearBoard()">Clear</button>
 </div>
 
-<div class="board-container">
+<div class="board-container" id="boardContainer">
   <canvas id="board"></canvas>
 </div>
 
