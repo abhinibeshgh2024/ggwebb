@@ -1,42 +1,52 @@
-let chart = null;
+let chartInstance = null;
+
+function addRow() {
+  const table = document.getElementById("dataTable");
+  const row = document.createElement("div");
+  row.className = "row";
+  row.innerHTML = `
+    <input type="text" placeholder="Label">
+    <input type="number" placeholder="Value">
+  `;
+  table.appendChild(row);
+}
 
 function generateChart() {
-  const labelsInput = document.getElementById("labels").value;
-  const valuesInput = document.getElementById("values").value;
-  const type = document.getElementById("chartType").value;
+  const rows = document.querySelectorAll(".row");
+  const labels = [];
+  const values = [];
   const errorBox = document.getElementById("error");
+  const type = document.getElementById("chartType").value;
 
   errorBox.innerText = "";
 
-  if (!labelsInput || !valuesInput) {
-    errorBox.innerText = "Please enter labels and values.";
+  rows.forEach(row => {
+    const label = row.children[0].value.trim();
+    const value = row.children[1].value;
+
+    if (label !== "" && value !== "") {
+      labels.push(label);
+      values.push(Number(value));
+    }
+  });
+
+  if (labels.length === 0) {
+    errorBox.innerText = "Please enter at least one valid data row.";
     return;
   }
 
-  const labels = labelsInput.split(",").map(l => l.trim());
-  const values = valuesInput.split(",").map(v => Number(v.trim()));
+  const ctx = document.getElementById("chartCanvas").getContext("2d");
 
-  if (labels.length !== values.length) {
-    errorBox.innerText = "Labels and values count must match.";
-    return;
+  if (chartInstance) {
+    chartInstance.destroy();
   }
 
-  if (values.some(isNaN)) {
-    errorBox.innerText = "Values must be numeric only.";
-    return;
-  }
-
-  const canvas = document.getElementById("chartCanvas");
-  const ctx = canvas.getContext("2d");
-
-  if (chart) chart.destroy();
-
-  chart = new Chart(ctx, {
+  chartInstance = new Chart(ctx, {
     type: type,
     data: {
       labels: labels,
       datasets: [{
-        label: "AI Chart Data",
+        label: "Chart Maker Data",
         data: values,
         backgroundColor: "#00bfff"
       }]
