@@ -1,0 +1,50 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f4f4;
+}
+
+header {
+  padding: 10px;
+  text-align: center;
+  background: #1a1a1a;
+  color: white;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  background: #ffffff;
+  border-bottom: 1px solid #ccc;
+}
+
+.toolbar button,
+.toolbar input,
+.upload-btn {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.upload-btn {
+  position: relative;
+}
+
+.board-container {
+  width: 100%;
+  height: calc(100vh - 120px);
+  overflow: auto;
+  background: white;
+}
+
+canvas {
+  background: white;
+}
