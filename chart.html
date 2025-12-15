@@ -10,13 +10,19 @@
 
 <header>
   <h1>📊 Chart Maker</h1>
-  <p>Accurate • Responsive • Reliable</p>
+  <p>Accurate • Reliable • Responsive</p>
 </header>
 
 <main class="container">
 
   <section class="input-panel">
-    <h2>Data Input</h2>
+    <h2>Chart Configuration</h2>
+
+    <label>Chart Title</label>
+    <input type="text" id="chartTitle" placeholder="Enter chart title">
+
+    <label>Chart Description</label>
+    <textarea id="chartDesc" placeholder="Short description"></textarea>
 
     <label>Chart Type</label>
     <select id="chartType">
@@ -25,14 +31,11 @@
       <option value="pie">Pie Chart</option>
     </select>
 
-    <div id="dataTable">
-      <div class="row">
-        <input type="text" placeholder="Label">
-        <input type="number" placeholder="Value">
-      </div>
-    </div>
+    <h3>Data Input</h3>
 
-    <button onclick="addRow()">➕ Add Row</button>
+    <div id="dataTable"></div>
+
+    <button onclick="addRow()">➕ Add Data Row</button>
     <button onclick="generateChart()">📈 Generate Chart</button>
 
     <div id="error"></div>
@@ -45,11 +48,12 @@
 </main>
 
 <footer>
-  <p>Built with discipline & precision</p>
+  <p>Built with discipline & correctness</p>
 </footer>
 
-<!-- Chart Engine (Required) -->
+<!-- Chart.js – REQUIRED -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="chart.js"></script>
+
 </body>
 </html>
