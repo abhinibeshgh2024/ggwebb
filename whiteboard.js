@@ -2,41 +2,41 @@ const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 const container = document.getElementById("boardContainer");
 
-canvas.width = 3500;
-canvas.height = 2200;
+canvas.width = 3000;
+canvas.height = 2000;
 
 let tool = "pen";
 let drawing = false;
-let color = "#1a73e8";
+let color = "#000";
 let size = 4;
 let dark = false;
+
+function togglePenMenu() {
+  const menu = document.getElementById("penMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function selectPen(type) {
+  tool = type;
+  document.getElementById("penMenu").style.display = "none";
+}
 
 function setTool(t) {
   tool = t;
 }
 
-function toggleMode() {
-  dark = !dark;
-  document.body.className = dark ? "dark" : "light";
-}
-
 document.getElementById("colorPicker").oninput = e => color = e.target.value;
 document.getElementById("sizePicker").oninput = e => size = e.target.value;
 
-// DRAW
-canvas.addEventListener("mousedown", startDraw);
-canvas.addEventListener("mousemove", draw);
-canvas.addEventListener("mouseup", () => drawing = false);
-
-function startDraw(e) {
+canvas.addEventListener("mousedown", e => {
   if (tool === "text") return createTextBox(e);
   drawing = true;
   ctx.beginPath();
   const p = getPos(e);
   ctx.moveTo(p.x, p.y);
-}
+});
 
-function draw(e) {
+canvas.addEventListener("mousemove", e => {
   if (!drawing) return;
   const p = getPos(e);
 
@@ -52,19 +52,20 @@ function draw(e) {
   } else {
     ctx.globalAlpha = 1;
     ctx.lineWidth = size;
+    ctx.strokeStyle = color;
   }
 
-  ctx.strokeStyle = color;
   ctx.lineTo(p.x, p.y);
   ctx.stroke();
-}
+});
+
+canvas.addEventListener("mouseup", () => drawing = false);
 
 function getPos(e) {
   const r = canvas.getBoundingClientRect();
   return { x: e.clientX - r.left, y: e.clientY - r.top };
 }
 
-/* TEXT BOX ONLY INSIDE BOARD */
 function createTextBox(e) {
   if (e.target !== canvas) return;
 
@@ -72,12 +73,12 @@ function createTextBox(e) {
   box.className = "text-box";
   box.contentEditable = true;
 
-  const close = document.createElement("span");
-  close.className = "close";
-  close.innerHTML = "❌";
-  close.onclick = () => box.remove();
+  const cancel = document.createElement("span");
+  cancel.className = "cancel";
+  cancel.innerHTML = "❌";
+  cancel.onclick = () => box.remove();
 
-  box.appendChild(close);
+  box.appendChild(cancel);
   box.appendChild(document.createTextNode("Type here"));
 
   box.style.left = e.offsetX + "px";
@@ -85,9 +86,9 @@ function createTextBox(e) {
 
   makeDraggable(box);
   container.appendChild(box);
+  box.focus();
 }
 
-/* IMAGE */
 function addImage(e) {
   const img = document.createElement("img");
   img.src = URL.createObjectURL(e.target.files[0]);
@@ -99,7 +100,6 @@ function addImage(e) {
   container.appendChild(img);
 }
 
-/* DRAG */
 function makeDraggable(el) {
   let ox, oy;
   el.onmousedown = ev => {
@@ -111,6 +111,11 @@ function makeDraggable(el) {
     };
     document.onmouseup = () => document.onmousemove = null;
   };
+}
+
+function toggleMode() {
+  dark = !dark;
+  document.body.className = dark ? "dark" : "light";
 }
 
 function clearBoard() {
