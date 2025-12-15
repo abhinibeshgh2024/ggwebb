@@ -1,6 +1,7 @@
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 const container = document.getElementById("boardContainer");
+const header = document.getElementById("headerTitle");
 
 canvas.width = 3000;
 canvas.height = 2000;
@@ -9,25 +10,31 @@ let tool = "pen";
 let drawing = false;
 let color = "#000";
 let size = 4;
-let dark = false;
 
-function togglePenMenu() {
-  const menu = document.getElementById("penMenu");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
+function setHeader() {
+  header.innerText = "WHITEBOARD – " + tool.toUpperCase();
 }
 
-function selectPen(type) {
-  tool = type;
+function togglePenMenu() {
+  const m = document.getElementById("penMenu");
+  m.style.display = m.style.display === "block" ? "none" : "block";
+}
+
+function selectPen(t) {
+  tool = t;
+  setHeader();
   document.getElementById("penMenu").style.display = "none";
 }
 
 function setTool(t) {
   tool = t;
+  setHeader();
 }
 
 document.getElementById("colorPicker").oninput = e => color = e.target.value;
 document.getElementById("sizePicker").oninput = e => size = e.target.value;
 
+/* DRAW */
 canvas.addEventListener("mousedown", e => {
   if (tool === "text") return createTextBox(e);
   drawing = true;
@@ -46,15 +53,12 @@ canvas.addEventListener("mousemove", e => {
   } else if (tool === "highlighter") {
     ctx.globalAlpha = 0.25;
     ctx.lineWidth = size * 4;
-  } else if (tool === "eraser") {
-    ctx.strokeStyle = dark ? "#000" : "#fff";
-    ctx.lineWidth = size * 3;
   } else {
     ctx.globalAlpha = 1;
     ctx.lineWidth = size;
-    ctx.strokeStyle = color;
   }
 
+  ctx.strokeStyle = color;
   ctx.lineTo(p.x, p.y);
   ctx.stroke();
 });
@@ -66,6 +70,7 @@ function getPos(e) {
   return { x: e.clientX - r.left, y: e.clientY - r.top };
 }
 
+/* TEXT SYSTEM */
 function createTextBox(e) {
   if (e.target !== canvas) return;
 
@@ -73,49 +78,45 @@ function createTextBox(e) {
   box.className = "text-box";
   box.contentEditable = true;
 
-  const cancel = document.createElement("span");
-  cancel.className = "cancel";
-  cancel.innerHTML = "❌";
-  cancel.onclick = () => box.remove();
+  const actions = document.createElement("div");
+  actions.className = "text-actions";
 
-  box.appendChild(cancel);
-  box.appendChild(document.createTextNode("Type here"));
+  const ok = document.createElement("span");
+  ok.innerHTML = "✅";
+
+  const cancel = document.createElement("span");
+  cancel.innerHTML = "❌";
+
+  actions.appendChild(ok);
+  actions.appendChild(cancel);
+  box.appendChild(actions);
 
   box.style.left = e.offsetX + "px";
   box.style.top = e.offsetY + "px";
 
-  makeDraggable(box);
+  ok.onclick = () => finalizeText(box);
+  cancel.onclick = () => box.remove();
+
   container.appendChild(box);
   box.focus();
 }
 
-function addImage(e) {
-  const img = document.createElement("img");
-  img.src = URL.createObjectURL(e.target.files[0]);
-  img.className = "img-box";
-  img.style.width = "250px";
-  img.style.left = "100px";
-  img.style.top = "100px";
-  makeDraggable(img);
-  container.appendChild(img);
-}
+function finalizeText(box) {
+  const text = box.innerText.replace("✅","").replace("❌","");
+  const fixed = document.createElement("div");
+  fixed.className = "fixed-text";
+  fixed.innerText = text;
+  fixed.style.left = box.style.left;
+  fixed.style.top = box.style.top;
 
-function makeDraggable(el) {
-  let ox, oy;
-  el.onmousedown = ev => {
-    ox = ev.offsetX;
-    oy = ev.offsetY;
-    document.onmousemove = mv => {
-      el.style.left = mv.pageX - ox + "px";
-      el.style.top = mv.pageY - oy + "px";
-    };
-    document.onmouseup = () => document.onmousemove = null;
+  fixed.onclick = () => {
+    box.innerText = text;
+    container.appendChild(box);
+    fixed.remove();
   };
-}
 
-function toggleMode() {
-  dark = !dark;
-  document.body.className = dark ? "dark" : "light";
+  container.appendChild(fixed);
+  box.remove();
 }
 
 function clearBoard() {
