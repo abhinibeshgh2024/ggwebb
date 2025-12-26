@@ -12,19 +12,40 @@ body {
     color: #ffffff;
 }
 
-/* ===== NAVBAR ===== */
-.navbar-wrapper {
+/* ===== HEADER ===== */
+.main-header {
     position: sticky;
     top: 0;
-    z-index: 100;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(12px);
+    z-index: 200;
+    padding: 14px 20px 18px;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
+/* ===== BRAND ===== */
+.brand {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.brand h1 {
+    font-size: 22px;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.brand p {
+    font-size: 12px;
+    opacity: 0.75;
+    letter-spacing: 2px;
+}
+
+/* ===== NAVBAR ===== */
 .navbar {
     display: flex;
-    gap: 14px;
+    justify-content: center;
+    gap: 16px;
     overflow-x: auto;
     scrollbar-width: none;
 }
@@ -34,13 +55,14 @@ body {
 }
 
 .nav-item {
-    padding: 10px 24px;
-    border-radius: 22px;
+    padding: 8px 18px;
+    font-size: 13px;
+    border-radius: 18px;
     border: 1px solid #4da3ff;
-    background: rgba(77, 163, 255, 0.18);
+    background: rgba(77, 163, 255, 0.16);
     cursor: pointer;
     white-space: nowrap;
-    transition: 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .nav-item:hover {
@@ -54,7 +76,7 @@ body {
 }
 
 .section h2 {
-    font-size: 28px;
+    font-size: 26px;
     margin-bottom: 24px;
     padding-left: 12px;
     border-left: 5px solid #4da3ff;
@@ -74,14 +96,14 @@ body {
     overflow: hidden;
     background: #0e0e0e;
     position: relative;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.45);
 }
 
-/* 🔥 WORDPRESS STYLE IMAGE FIT */
+/* 🔥 WORDPRESS-STYLE IMAGE FIT */
 .gallery-card img {
     width: 100%;
     height: 100%;
-    object-fit: cover;        /* portrait/landscape safe */
+    object-fit: cover;
     object-position: center;
 }
 
@@ -114,6 +136,15 @@ body {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
+    .brand h1 {
+        font-size: 20px;
+    }
+
+    .nav-item {
+        padding: 7px 14px;
+        font-size: 12px;
+    }
+
     .gallery-card {
         height: 200px;
     }
