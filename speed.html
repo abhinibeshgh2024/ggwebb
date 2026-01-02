@@ -1,38 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>GoGenix Internet Speed Test</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="speed.css">
+    <meta charset="UTF-8">
+    <title>GoGenix Speed Test</title>
+    <link rel="stylesheet" href="speedtest.css">
 </head>
 <body>
 
-<header class="header">
+<div class="speedtest-container">
     <h1>Internet Speed Test</h1>
-    <p>Measure your real-time network speed</p>
-</header>
 
-<div class="container">
-    <div class="card center">
-
-        <canvas id="speedMeter" width="250" height="250"></canvas>
-
-        <div class="speed-text">
-            <span id="speedValue">0</span>
+    <div class="meter">
+        <svg width="260" height="260">
+            <circle cx="130" cy="130" r="110" class="bg"/>
+            <circle cx="130" cy="130" r="110" class="progress"/>
+        </svg>
+        <div class="speed-value">
+            <span id="speed">0</span>
             <small>Mbps</small>
         </div>
-
-        <button class="btn primary" onclick="startTest()">Start Test</button>
-
-        <div class="details">
-            <p>Download Speed: <b id="download">0 Mbps</b></p>
-            <p>Status: <b id="status">Idle</b></p>
-        </div>
-
     </div>
+
+    <button onclick="startTest()">Start Test</button>
+
+    <p class="status" id="status">Ready</p>
 </div>
 
-<script src="speed.js"></script>
+<script src="speedtest.js"></script>
 </body>
 </html>
