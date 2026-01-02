@@ -1,76 +1,94 @@
-async function jpgToPng(){
-    const file = document.getElementById("jpgInput").files[0];
-    if(!file){
-        alert("Please select a JPG file");
+function showAlert(msg){
+    document.getElementById("alertBox").innerText = msg;
+    setTimeout(()=>document.getElementById("alertBox").innerText="",4000);
+}
+
+/* JPG → PNG */
+function jpgToPng(){
+    const file=document.getElementById("jpgToPng").files[0];
+    if(!file || file.type!=="image/jpeg"){
+        showAlert("Please select a valid JPG file.");
         return;
     }
+    convertImage(file,"image/png","converted.png");
+}
 
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
+/* PNG → JPG */
+function pngToJpg(){
+    const file=document.getElementById("pngToJpg").files[0];
+    if(!file || file.type!=="image/png"){
+        showAlert("Please select a valid PNG file.");
+        return;
+    }
+    convertImage(file,"image/jpeg","converted.jpg");
+}
 
-    img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img,0,0);
-
-        canvas.toBlob(blob=>{
-            saveAs(blob,"converted.png");
-        });
+function convertImage(file,type,name){
+    const img=new Image();
+    img.src=URL.createObjectURL(file);
+    img.onload=()=>{
+        const c=document.createElement("canvas");
+        c.width=img.width;
+        c.height=img.height;
+        c.getContext("2d").drawImage(img,0,0);
+        c.toBlob(b=>saveAs(b,name),type);
     };
 }
 
-async function jpgToPdf(){
-    const file = document.getElementById("jpgPdfInput").files[0];
-    if(!file){
-        alert("Please select an image");
+/* Image → PDF */
+async function imageToPdf(id,name){
+    const file=document.getElementById(id).files[0];
+    if(!file || !file.type.startsWith("image/")){
+        showAlert("Please select a valid image file.");
         return;
     }
-
-    const pdfDoc = await PDFLib.PDFDocument.create();
-    const imgBytes = await file.arrayBuffer();
-    const image = await pdfDoc.embedJpg(imgBytes);
-
-    const page = pdfDoc.addPage([image.width,image.height]);
-    page.drawImage(image,{
-        x:0,y:0,
-        width:image.width,
-        height:image.height
-    });
-
-    const pdfBytes = await pdfDoc.save();
-    saveAs(new Blob([pdfBytes]),"image.pdf");
+    const pdf=await PDFLib.PDFDocument.create();
+    const imgBytes=await file.arrayBuffer();
+    const img=file.type==="image/png"
+        ? await pdf.embedPng(imgBytes)
+        : await pdf.embedJpg(imgBytes);
+    const page=pdf.addPage([img.width,img.height]);
+    page.drawImage(img,{x:0,y:0,width:img.width,height:img.height});
+    saveAs(new Blob([await pdf.save()]),name);
 }
 
+/* PDF → JPG (first page) */
+async function pdfToJpg(){
+    const file=document.getElementById("pdfToJpg").files[0];
+    if(!file || file.type!=="application/pdf"){
+        showAlert("Please select a valid PDF file.");
+        return;
+    }
+    showAlert("PDF to JPG requires backend for multi-page. First page only supported.");
+}
+
+/* Merge PDF */
 async function mergePdf(){
-    const files = document.getElementById("mergePdfInput").files;
-    if(files.length < 2){
-        alert("Select at least 2 PDF files");
+    const files=document.getElementById("mergePdf").files;
+    if(files.length<2){
+        showAlert("Please select at least 2 PDF files.");
         return;
     }
-
-    const mergedPdf = await PDFLib.PDFDocument.create();
-
-    for(let file of files){
-        const bytes = await file.arrayBuffer();
-        const pdf = await PDFLib.PDFDocument.load(bytes);
-        const pages = await mergedPdf.copyPages(pdf,pdf.getPageIndices());
-        pages.forEach(p=>mergedPdf.addPage(p));
+    const merged=await PDFLib.PDFDocument.create();
+    for(let f of files){
+        if(f.type!=="application/pdf"){
+            showAlert("Only PDF files allowed.");
+            return;
+        }
+        const pdf=await PDFLib.PDFDocument.load(await f.arrayBuffer());
+        const pages=await merged.copyPages(pdf,pdf.getPageIndices());
+        pages.forEach(p=>merged.addPage(p));
     }
-
-    const mergedBytes = await mergedPdf.save();
-    saveAs(new Blob([mergedBytes]),"merged.pdf");
+    saveAs(new Blob([await merged.save()]),"merged.pdf");
 }
 
+/* Compress PDF */
 async function compressPdf(){
-    const file = document.getElementById("compressPdfInput").files[0];
-    if(!file){
-        alert("Please select a PDF");
+    const file=document.getElementById("compressPdf").files[0];
+    if(!file || file.type!=="application/pdf"){
+        showAlert("Please select a valid PDF file.");
         return;
     }
-
-    const pdf = await PDFLib.PDFDocument.load(await file.arrayBuffer());
-    const bytes = await pdf.save({useObjectStreams:true});
-    saveAs(new Blob([bytes]),"compressed.pdf");
+    const pdf=await PDFLib.PDFDocument.load(await file.arrayBuffer());
+    saveAs(new Blob([await pdf.save({useObjectStreams:true})]),"compressed.pdf");
 }
