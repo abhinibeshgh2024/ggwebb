@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>GoGenix | Advanced Resume Builder</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="stylerb.css">
+<meta charset="UTF-8">
+<title>GoGenix | Advanced Resume Builder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="stylerb.css">
 </head>
 <body>
 
@@ -13,6 +13,12 @@
   <div>
     Heading Color <input type="color" id="headingColor" value="#1e3a8a">
     Text Color <input type="color" id="textColor" value="#000000">
+    Theme: 
+    <select id="themeSelect">
+      <option value="corporate">Corporate</option>
+      <option value="academic">Academic</option>
+      <option value="creative">Creative</option>
+    </select>
   </div>
 </header>
 
@@ -62,6 +68,13 @@
 <input placeholder="Volume / Issue / Year" id="pubVolume">
 <button onclick="addPublication()">➕ Add Publication</button>
 
+<!-- ===== CERTIFICATIONS ===== -->
+<h2>Certifications</h2>
+<input placeholder="Certification Name" id="certName">
+<input placeholder="Issuing Organization" id="certOrg">
+<input placeholder="Year" id="certYear">
+<button onclick="addCertification()">➕ Add Certification</button>
+
 <button class="download" onclick="downloadPDF()">⬇ Download Resume</button>
 </div>
 
@@ -102,10 +115,14 @@
   <ul id="p-publications"></ul>
 </section>
 
+<section>
+  <h3>Certifications</h3>
+  <ul id="p-certifications"></ul>
+</section>
+
 </div>
 </div>
 
 <script src="scriptrb.js"></script>
 </body>
 </html>
-
