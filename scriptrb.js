@@ -1,20 +1,63 @@
+/* ===============================
+   ADVANCED RESUME BUILDER + ANALYZER
+   =============================== */
+
+const REQUIRED_SECTIONS = [
+  'education',
+  'experience',
+  'skills',
+  'projects',
+  'certifications',
+  'languages',
+  'achievements'
+];
+
+const STRONG_ACTION_WORDS = [
+  'developed','designed','implemented','optimized','led','managed',
+  'analyzed','engineered','deployed','automated','built','created'
+];
+
+const TECH_KEYWORDS = [
+  'javascript','python','java','c++','html','css','react','node',
+  'machine learning','ai','sql','mongodb','firebase','docker',
+  'kubernetes','linux','cloud','aws','git','api'
+];
+
+/* ===============================
+   LIVE RESUME UPDATE
+   =============================== */
+
 function updateResume() {
-  const fields = ['name', 'email', 'phone', 'education', 'experience', 'skills', 'projects', 'certifications', 'languages', 'achievements', 'publications'];
+  document.getElementById('p-name').textContent =
+    document.getElementById('name').value || '[Your Name]';
 
-  document.getElementById('p-name').textContent = document.getElementById('name').value || '[Your Name]';
-  document.getElementById('p-email').textContent = document.getElementById('email').value || '[Your Email]';
-  document.getElementById('p-phone').textContent = document.getElementById('phone').value || '[Your Phone]';
-  document.getElementById('p-name-signature').textContent = document.getElementById('name').value || '[Your Name]';
+  document.getElementById('p-email').textContent =
+    document.getElementById('email').value || '[Your Email]';
 
-  fields.slice(3).forEach(id => updateList(id, `p-${id}`));
+  document.getElementById('p-phone').textContent =
+    document.getElementById('phone').value || '[Your Phone]';
+
+  document.getElementById('p-name-signature').textContent =
+    document.getElementById('name').value || '[Your Name]';
+
+  updateList('education', 'p-education');
+  updateList('experience', 'p-experience');
+  updateList('skills', 'p-skills');
+  updateList('projects', 'p-projects');
+  updateList('certifications', 'p-certifications');
+  updateList('languages', 'p-languages');
+  updateList('achievements', 'p-achievements');
+  updateList('publications', 'p-publications');
 }
 
 function updateList(inputId, listId) {
-  const input = document.getElementById(inputId);
+  const input = document.getElementById(inputId).value.trim();
   const list = document.getElementById(listId);
-  const items = input.value.trim().split('\n').filter(Boolean);
   list.innerHTML = '';
-  items.forEach(item => {
+
+  if (!input) return;
+
+  input.split('\n').forEach(item => {
     const li = document.createElement('li');
     li.textContent = item;
     li.classList.add('animated-list');
@@ -22,72 +65,148 @@ function updateList(inputId, listId) {
   });
 }
 
+/* ===============================
+   PROFILE PHOTO
+   =============================== */
+
 function previewPhoto(event) {
   const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = document.getElementById('profile-pic');
-      img.src = e.target.result;
-      img.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-  }
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('profile-pic');
+    img.src = e.target.result;
+    img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
 }
 
-function generateCoverLetter() {
-  const name = document.getElementById('name').value || '[Your Name]';
-  const email = document.getElementById('email').value || '[Your Email]';
-  const phone = document.getElementById('phone').value || '[Your Phone]';
-  const letter = `Dear Hiring Manager,\n\nMy name is ${name}, and I am writing to express my interest in the opportunity available at your organization. I bring a strong background and relevant skills that align with your goals.\n\nPlease feel free to reach out via email at ${email} or phone at ${phone}.\n\nThank you for your consideration.\n\nSincerely,\n${name}`;
-  document.getElementById('generated-letter').textContent = letter;
-  document.getElementById('cover-letter').style.display = 'block';
-}
+/* ===============================
+   ADVANCED RESUME ANALYZER
+   =============================== */
 
 function analyzeResume() {
-  const fields = ['education', 'experience', 'skills', 'projects', 'certifications', 'languages', 'achievements', 'publications'];
-  const list = document.getElementById('analysis-list');
-  list.innerHTML = '';
+  const analysisList = document.getElementById('analysis-list');
+  analysisList.innerHTML = '';
 
-  fields.forEach(id => {
-    const text = document.getElementById(id).value.trim();
-    const li = document.createElement('li');
-    li.textContent = text ? `${id.charAt(0).toUpperCase() + id.slice(1)} looks good.` : `${id.charAt(0).toUpperCase() + id.slice(1)} is empty.`;
-    list.appendChild(li);
+  let score = 0;
+  let maxScore = 100;
+
+  // Section completeness
+  REQUIRED_SECTIONS.forEach(section => {
+    const value = document.getElementById(section).value.trim();
+    if (value.length > 20) {
+      score += 10;
+      addAnalysis(`${capitalize(section)} section is well filled ✔️`);
+    } else {
+      addAnalysis(`${capitalize(section)} section is weak or empty ⚠️`);
+    }
   });
+
+  // Skills keyword match
+  const skillsText = document.getElementById('skills').value.toLowerCase();
+  let keywordCount = 0;
+
+  TECH_KEYWORDS.forEach(keyword => {
+    if (skillsText.includes(keyword)) keywordCount++;
+  });
+
+  if (keywordCount >= 6) {
+    score += 15;
+    addAnalysis('Strong technical keyword presence (ATS-friendly) ✔️');
+  } else {
+    addAnalysis('Low technical keyword density ❌ (ATS risk)');
+  }
+
+  // Experience strength
+  const expText = document.getElementById('experience').value.toLowerCase();
+  let actionHits = 0;
+
+  STRONG_ACTION_WORDS.forEach(word => {
+    if (expText.includes(word)) actionHits++;
+  });
+
+  if (actionHits >= 3) {
+    score += 15;
+    addAnalysis('Experience section uses strong action verbs ✔️');
+  } else {
+    addAnalysis('Experience lacks impactful action verbs ⚠️');
+  }
+
+  // Resume length health
+  const totalTextLength =
+    document.getElementById('education').value.length +
+    document.getElementById('experience').value.length +
+    document.getElementById('skills').value.length;
+
+  if (totalTextLength > 500) {
+    score += 10;
+    addAnalysis('Resume content length is optimal ✔️');
+  } else {
+    addAnalysis('Resume content is too short ❌');
+  }
+
+  // Final score
+  const finalScore = Math.min(score, maxScore);
+  addAnalysis(`Overall Resume Score: ${finalScore} / 100 ⭐`);
 
   document.getElementById('resume-analysis').style.display = 'block';
 }
 
-function printResume() {
-  const resumeHTML = document.getElementById("resume").innerHTML;
-  const printWindow = window.open('', '', 'width=800,height=1000');
-  printWindow.document.write(`
-    <html>
-      <head>
-        <title>Download Resume</title>
-        <style>
-          body { font-family: 'Segoe UI', sans-serif; padding: 2rem; color: #000; background: #fff; }
-          h2, h3 { color: #1e3a8a; border-bottom: 1px solid #ccc; margin-top: 1.5rem; }
-          img { height: 200px; width: 200px; border-radius: 12px; object-fit: cover; border: 2px solid #1e3a8a; margin-right: 1rem; }
-          ul { padding-left: 1.5rem; list-style-type: square; }
-          .signature { margin-top: 2rem; text-align: right; font-style: italic; border-top: 1px dashed #aaa; color: #555; padding-top: 1rem; }
-        </style>
-      </head>
-      <body>${resumeHTML}</body>
-    </html>
-  `);
-  printWindow.document.close();
-  printWindow.focus();
-  printWindow.print();
-  printWindow.close();
+function addAnalysis(text) {
+  const li = document.createElement('li');
+  li.textContent = text;
+  li.classList.add('animated-list');
+  document.getElementById('analysis-list').appendChild(li);
 }
 
-function toggleDarkMode() {
-  const body = document.body;
-  const isDark = body.classList.toggle('dark-mode');
-  document.getElementById('site-logo').style.display = isDark ? 'none' : 'block';
-  document.getElementById('site-logo-white').style.display = isDark ? 'block' : 'none';
-} 
+/* ===============================
+   COVER LETTER (SMART)
+   =============================== */
 
-window.onload = () => updateResume();
+function generateCoverLetter() {
+  const name = document.getElementById('name').value || 'Candidate';
+  const skills = document.getElementById('skills').value.split('\n')[0] || 'relevant skills';
+
+  const letter = `
+Dear Hiring Manager,
+
+I am ${name}, a highly motivated professional with strong expertise in ${skills}.
+My background reflects hands-on experience, problem-solving ability, and a results-driven mindset.
+
+I am confident that my skills and dedication will add value to your organization.
+
+Sincerely,
+${name}
+`;
+
+  document.getElementById('generated-letter').textContent = letter.trim();
+  document.getElementById('cover-letter').style.display = 'block';
+}
+
+/* ===============================
+   PDF PRINT
+   =============================== */
+
+function printResume() {
+  window.print();
+}
+
+/* ===============================
+   DARK MODE
+   =============================== */
+
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+}
+
+/* ===============================
+   INIT
+   =============================== */
+
+window.onload = updateResume;
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
