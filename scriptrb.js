@@ -1,34 +1,11 @@
-function updateResume() {
-  setText("name", "p-name");
-  setText("email", "p-email");
-  setText("phone", "p-phone");
+const headingColor = document.getElementById("headingColor");
+const textColor = document.getElementById("textColor");
 
-  makeList("education");
-  makeList("experience");
-  makeList("skills");
-  makeList("projects");
-  makeList("certifications");
+headingColor.oninput = () =>
+  document.documentElement.style.setProperty("--headingColor", headingColor.value);
 
-  updateProgress();
-}
-
-function setText(input, output) {
-  document.getElementById(output).innerText =
-    document.getElementById(input).value;
-}
-
-function makeList(id) {
-  const ul = document.getElementById("p-" + id);
-  ul.innerHTML = "";
-  document.getElementById(id).value
-    .split("\n")
-    .filter(Boolean)
-    .forEach(item => {
-      const li = document.createElement("li");
-      li.innerText = item;
-      ul.appendChild(li);
-    });
-}
+textColor.oninput = () =>
+  document.getElementById("resume").style.color = textColor.value;
 
 function previewPhoto(e) {
   const img = document.getElementById("profile-pic");
@@ -36,40 +13,38 @@ function previewPhoto(e) {
   img.style.display = "block";
 }
 
-function updateProgress() {
-  let score = 0;
-  ["education","experience","skills","projects","certifications"]
-    .forEach(id => {
-      if (document.getElementById(id).value.length > 15) score++;
-    });
-  document.getElementById("progressFill").style.width =
-    (score / 5 * 100) + "%";
+function addEducation() {
+  const ul = document.getElementById("p-education");
+  ul.innerHTML += `<li><b>${eduInstitute.value}</b>, ${eduCourse.value} – ${eduCity.value} (${eduBatch.value})</li>`;
 }
 
-function analyzeResume() {
-  const box = document.getElementById("resume-analysis");
-  const list = document.getElementById("analysis-list");
-  list.innerHTML = "";
+function addExperience() {
+  p("p-experience", `<li><b>${expCompany.value}</b> – ${expRole.value} (${expDuration.value})<br>${expDesc.value}</li>`);
+}
 
-  ["Education","Experience","Skills","Projects","Certifications"]
-    .forEach(s => {
-      const li = document.createElement("li");
-      li.innerText = s + " section reviewed ✔";
-      list.appendChild(li);
-    });
+function addSkill() {
+  p("p-skills", `<li>${skillInput.value}</li>`);
+}
 
-  box.style.display = "block";
+function addProject() {
+  p("p-projects", `<li><b>${projTitle.value}</b>: ${projDesc.value}</li>`);
+}
+
+function addPublication() {
+  p("p-publications", `<li><b>${pubTitle.value}</b>, ${pubJournal.value}, ${pubVolume.value}</li>`);
+}
+
+function p(id, html) {
+  document.getElementById(id).innerHTML += html;
 }
 
 function downloadPDF() {
   window.print();
 }
 
-// AUTO META
-document.getElementById("resumeId").innerText =
-  "RB-" + Math.floor(Math.random() * 90000);
-
-document.getElementById("genDate").innerText =
-  new Date().toLocaleDateString();
-
-updateResume();
+["name","email","phone"].forEach(id=>{
+  document.getElementById(id).oninput=()=>{
+    document.getElementById("p-"+id).innerText =
+      document.getElementById(id).value;
+  }
+});
