@@ -8,12 +8,10 @@
 </head>
 <body>
 
-<header class="glass header">
-  <img src="WEBB-removebg-preview.png" width="110">
-  <div>
-    <h2>Webb Chart Maker</h2>
-    <p>Accurate • Reliable • Responsive</p>
-  </div>
+<header class="header glass">
+  <img src="WEBB-removebg-preview.png" alt="WRBB Logo">
+  <h2>Webb Chart Maker</h2>
+  <p>Accurate • Reliable • Responsive</p>
 </header>
 
 <main class="container">
@@ -27,15 +25,15 @@
 
     <label>Chart Type</label>
     <select id="chartType">
-      <option value="bar">Bar</option>
-      <option value="line">Line</option>
-      <option value="pie">Pie</option>
+      <option value="bar">Bar Chart</option>
+      <option value="line">Line Chart</option>
+      <option value="pie">Pie Chart</option>
     </select>
 
-    <h3>Datasets</h3>
-    <div id="datasets"></div>
+    <h3>Data Rows</h3>
+    <div id="dataRows"></div>
 
-    <button onclick="addDataset()">➕ Add Dataset</button>
+    <button onclick="addRow()">➕ Add Data Row</button>
   </section>
 
   <!-- CHART PREVIEW -->
@@ -43,7 +41,7 @@
     <canvas id="chartCanvas"></canvas>
   </section>
 
-  <!-- ACTION BUTTONS -->
+  <!-- ACTIONS -->
   <section class="action-panel glass">
     <button onclick="generateChart()">📊 Generate Chart</button>
     <button onclick="exportPDF()">⬇ Export PDF</button>
@@ -52,8 +50,8 @@
 
 </main>
 
-<footer class="glass footer">
-  <p>Built with discipline & correctness</p>
+<footer class="footer glass">
+  Built with discipline & correctness
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
