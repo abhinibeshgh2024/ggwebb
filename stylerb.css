@@ -8,10 +8,9 @@ body {
 }
 
 .top-header {
-  padding: 1rem 1rem;
-  background: transparents;
+  background: transparent;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
@@ -88,5 +87,6 @@ section { margin-top:1.5rem; border-bottom:1px dashed #ccc; padding-bottom:0.5re
   #resume, #resume * { visibility:visible; }
   #resume { position:absolute; top:0; left:0; width:100%; }
 }
+
 
 
