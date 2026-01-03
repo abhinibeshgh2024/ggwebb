@@ -1,143 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Resume Builder</title>
-  <link rel="stylesheet" href="stylerb.css
-  
-  ">
-  <style>
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      #resume, #resume * {
-        visibility: visible;
-      }
-      #resume {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        padding: 2rem;
-        background: white;
-        color: black;
-      }
-      header, .form-section, #cover-letter, #resume-analysis {
-        display: none !important;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="logo-container">
-    
-    </div>
-    Instant Resume Builder
-  </header>
+<header class="top-header">
+  <h1>Instant Resume Builder</h1>
+  <span class="invoice-id">Resume ID: <span id="resumeId"></span></span>
+</header>
 
-  <div class="container">
-    <div class="form-section">
-      <h2>Input Section</h2>
+<div class="container invoice-layout">
 
-      <label>Name:</label>
-      <input type="text" id="name" oninput="updateResume()">
+  <!-- INPUT PANEL -->
+  <div class="form-section">
+    <h2>Candidate Details</h2>
 
-      <label>Email:</label>
-      <input type="email" id="email" oninput="updateResume()">
+    <label>Full Name</label>
+    <input id="name" oninput="updateResume()">
 
-      <label>Phone:</label>
-      <input type="text" id="phone" oninput="updateResume()">
+    <label>Email</label>
+    <input id="email" oninput="updateResume()">
 
-      <label>Education:</label>
-      <textarea id="education" rows="3" oninput="updateResume()"></textarea>
+    <label>Phone</label>
+    <input id="phone" oninput="updateResume()">
 
-      <label>Experience:</label>
-      <textarea id="experience" rows="3" oninput="updateResume()"></textarea>
+    <label>Education</label>
+    <textarea id="education" oninput="updateResume()"></textarea>
 
-      <label>Skills:</label>
-      <textarea id="skills" rows="2" oninput="updateResume()"></textarea>
+    <label>Experience</label>
+    <textarea id="experience" oninput="updateResume()"></textarea>
 
-      <label>Projects:</label>
-      <textarea id="projects" rows="3" oninput="updateResume()"></textarea>
+    <label>Skills</label>
+    <textarea id="skills" oninput="updateResume()"></textarea>
 
-      <label>Certifications:</label>
-      <textarea id="certifications" rows="2" oninput="updateResume()"></textarea>
+    <label>Projects</label>
+    <textarea id="projects" oninput="updateResume()"></textarea>
 
-      <label>Languages:</label>
-      <textarea id="languages" rows="2" oninput="updateResume()"></textarea>
+    <label>Certifications</label>
+    <textarea id="certifications" oninput="updateResume()"></textarea>
 
-      <label>Achievements:</label>
-      <textarea id="achievements" rows="2" oninput="updateResume()"></textarea>
+    <label>Profile Photo</label>
+    <input type="file" accept="image/*" onchange="previewPhoto(event)">
 
-      <label>Publications:</label>
-      <textarea id="publications" rows="2" oninput="updateResume()"></textarea>
+    <button onclick="analyzeResume()">📊 Analyze</button>
+    <button onclick="downloadPDF()">⬇ Download PDF</button>
+  </div>
 
-      <label>Profile Picture:</label>
-      <input type="file" accept="image/*" onchange="previewPhoto(event)">
+  <!-- RESUME / INVOICE -->
+  <div class="preview-section invoice" id="resume">
 
-      <button onclick="generateCoverLetter()">✉️ Generate Cover Letter</button>
-      <button onclick="analyzeResume()">📊 Analyze Resume</button>
-      <button onclick="printResume()">🖨️ Download PDF</button>
-      <button onclick="toggleDarkMode()">🌓 Toggle Theme</button>
-    </div>
-
-    <div class="preview-section" id="resume">
-      <h2>Preview</h2>
-      <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
-        <img id="profile-pic" style="height: 200px; width: 200px; border-radius: 12px; display: none; object-fit: cover;" />
-        <div>
-          <h3 id="p-name">[Your Name]</h3>
-          <p id="p-email">[Your Email]</p>
-          <p id="p-phone">[Your Phone]</p>
-        </div>
+    <div class="invoice-header">
+      <img id="profile-pic" />
+      <div>
+        <h2 id="p-name">Your Name</h2>
+        <p id="p-email"></p>
+        <p id="p-phone"></p>
+        <p class="date">Generated: <span id="genDate"></span></p>
       </div>
+    </div>
 
+    <div class="invoice-row">
       <h3>Education</h3>
-      <ul id="p-education" class="preview-list"></ul>
+      <ul id="p-education"></ul>
+    </div>
 
+    <div class="invoice-row">
       <h3>Experience</h3>
-      <ul id="p-experience" class="preview-list"></ul>
+      <ul id="p-experience"></ul>
+    </div>
 
+    <div class="invoice-row">
       <h3>Skills</h3>
-      <ul id="p-skills" class="preview-list"></ul>
+      <ul id="p-skills"></ul>
+    </div>
 
+    <div class="invoice-row">
       <h3>Projects</h3>
-      <ul id="p-projects" class="preview-list"></ul>
+      <ul id="p-projects"></ul>
+    </div>
 
+    <div class="invoice-row">
       <h3>Certifications</h3>
-      <ul id="p-certifications" class="preview-list"></ul>
+      <ul id="p-certifications"></ul>
+    </div>
 
-      <h3>Languages</h3>
-      <ul id="p-languages" class="preview-list"></ul>
-
-      <h3>Achievements</h3>
-      <ul id="p-achievements" class="preview-list"></ul>
-
-      <h3>Publications</h3>
-      <ul id="p-publications" class="preview-list"></ul>
-
-      <div class="signature">
-        (Signature) <br>
-        <span id="p-name-signature">[Your Name]</span>
+    <div class="progress-box">
+      <label>Resume Completion</label>
+      <div class="progress-bar">
+        <div id="progressFill"></div>
       </div>
     </div>
+
   </div>
+</div>
 
-  <div class="container">
-    <div class="preview-section" id="cover-letter" style="display:none">
-      <h3>Cover Letter</h3>
-      <pre id="generated-letter"></pre>
-    </div>
-
-    <div class="preview-section" id="resume-analysis" style="display:none">
-      <h3>Resume Analysis</h3>
-      <ul id="analysis-list"></ul>
-    </div>
-  </div>
-
-  <script src="scriptrb.js"></script>
-</body>
-</html>
+<div class="analysis-box" id="resume-analysis" style="display:none">
+  <h3>Resume Insights</h3>
+  <ul id="analysis-list"></ul>
+</div>
