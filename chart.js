@@ -37,8 +37,8 @@ function addRow(btn) {
 function generateChart() {
   errorBox.textContent = "";
 
-  const type = document.getElementById("chartType").value;
-  const title = document.getElementById("chartTitle").value;
+  const type = chartType.value;
+  const title = chartTitle.value;
 
   let labels = [];
   let datasets = [];
