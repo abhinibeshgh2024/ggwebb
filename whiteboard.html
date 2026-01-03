@@ -2,46 +2,38 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Glassmorphism Whiteboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GoGenix Whiteboard</title>
-<link rel="stylesheet" href="whiteboard.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="top-header">
-  <h1>GoGenix Whiteboard</h1>
-</header>
+<div class="app">
+    <div class="toolbar glass">
+        <button onclick="setTool('pen')">✍️ Pen</button>
+        <button onclick="setTool('marker')">🖊 Marker</button>
+        <button onclick="setTool('eraser')">🧽 Eraser</button>
 
-<div class="container">
+        <button onclick="setShape('line')">📏 Line</button>
+        <button onclick="setShape('rect')">⬛ Rect</button>
+        <button onclick="setShape('circle')">⚪ Circle</button>
 
-<div class="tool-section glass">
-  <h2>Tools</h2>
+        <input type="color" id="colorPicker">
+        <input type="range" id="sizePicker" min="1" max="30" value="4">
 
-  <label>Pen Color</label>
-  <input type="color" id="penColor" value="#000000">
+        <label class="upload">
+            🖼 Image
+            <input type="file" accept="image/*" hidden onchange="insertImage(event)">
+        </label>
 
-  <label>Pen Size</label>
-  <input type="range" id="penSize" min="1" max="20" value="3">
+        <button onclick="clearBoard()">🧹 Clear</button>
+    </div>
 
-  <label>Pen Type</label>
-  <select id="penType">
-    <option value="round">Round</option>
-    <option value="square">Square</option>
-  </select>
-
-  <button onclick="eraseMode()">🧹 Erase</button>
-  <button onclick="clearCanvas()">🗑️ Clear</button>
-  <button onclick="downloadCanvas()">⬇ Download</button>
-  <label>Insert Image/Video</label>
-  <input type="file" id="mediaInput" accept="image/*,video/*">
+    <div class="board glass">
+        <canvas id="canvas"></canvas>
+    </div>
 </div>
 
-<div class="canvas-section glass">
-  <canvas id="whiteboard"></canvas>
-</div>
-
-</div>
-
-<script src="whiteboard.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
