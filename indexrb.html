@@ -2,111 +2,109 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Instant Resume Builder</title>
+  <title>GoGenix | Advanced Resume Builder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="stylerb.css">
 </head>
 <body>
 
 <header class="top-header">
-  <h1>Instant Resume Builder</h1>
-  <div class="meta">
-    Resume ID: <span id="resumeId"></span><br>
-    Date: <span id="genDate"></span>
+  <h1>oGenix Advanced Resume Builder</h1>
+  <div>
+    Heading Color <input type="color" id="headingColor" value="#1e3a8a">
+    Text Color <input type="color" id="textColor" value="#000000">
   </div>
 </header>
 
 <div class="container">
 
-  <!-- INPUT PANEL -->
-  <div class="form-section glass">
-    <h2>Candidate Details</h2>
+<!-- ================= INPUT PANEL ================= -->
+<div class="form-section glass">
 
-    <label>Full Name</label>
-    <input id="name" oninput="updateResume()">
+<h2>Basic Details</h2>
+<label>Name</label><input id="name">
+<label>Email</label><input id="email">
+<label>Phone</label><input id="phone">
+<label>Profile Photo</label>
+<input type="file" accept="image/*" onchange="previewPhoto(event)">
 
-    <label>Email</label>
-    <input id="email" oninput="updateResume()">
+<!-- ===== EDUCATION ===== -->
+<h2>Education</h2>
+<input placeholder="Institute" id="eduInstitute">
+<input placeholder="Course / Degree" id="eduCourse">
+<input placeholder="City" id="eduCity">
+<input placeholder="Batch (e.g. 2021–2025)" id="eduBatch">
+<button onclick="addEducation()">➕ Add Education</button>
 
-    <label>Phone</label>
-    <input id="phone" oninput="updateResume()">
+<!-- ===== EXPERIENCE ===== -->
+<h2>Experience</h2>
+<input placeholder="Company Name" id="expCompany">
+<input placeholder="Role / Position" id="expRole">
+<input placeholder="Duration" id="expDuration">
+<textarea placeholder="Work Description" id="expDesc"></textarea>
+<button onclick="addExperience()">➕ Add Experience</button>
 
-    <label>Education</label>
-    <textarea id="education" oninput="updateResume()"></textarea>
+<!-- ===== SKILLS ===== -->
+<h2>Skills</h2>
+<input placeholder="Skill (e.g. Java, AI, SQL)" id="skillInput">
+<button onclick="addSkill()">➕ Add Skill</button>
 
-    <label>Experience</label>
-    <textarea id="experience" oninput="updateResume()"></textarea>
+<!-- ===== PROJECTS ===== -->
+<h2>Projects</h2>
+<input placeholder="Project Title" id="projTitle">
+<textarea placeholder="Project Description" id="projDesc"></textarea>
+<button onclick="addProject()">➕ Add Project</button>
 
-    <label>Skills</label>
-    <textarea id="skills" oninput="updateResume()"></textarea>
+<!-- ===== PUBLICATIONS ===== -->
+<h2>Publications</h2>
+<input placeholder="Paper Title" id="pubTitle">
+<input placeholder="Journal Name" id="pubJournal">
+<input placeholder="Volume / Issue / Year" id="pubVolume">
+<button onclick="addPublication()">➕ Add Publication</button>
 
-    <label>Projects</label>
-    <textarea id="projects" oninput="updateResume()"></textarea>
+<button class="download" onclick="downloadPDF()">⬇ Download Resume</button>
+</div>
 
-    <label>Certifications</label>
-    <textarea id="certifications" oninput="updateResume()"></textarea>
+<!-- ================= PREVIEW ================= -->
+<div class="preview-section invoice" id="resume">
 
-    <label>Profile Photo</label>
-    <input type="file" accept="image/*" onchange="previewPhoto(event)">
-
-    <button onclick="analyzeResume()">📊 Analyze Resume</button>
-    <button onclick="downloadPDF()">⬇ Download PDF</button>
-  </div>
-
-  <!-- RESUME PREVIEW -->
-  <div class="preview-section invoice" id="resume">
-
-    <div class="invoice-header">
-      <img id="profile-pic">
-      <div>
-        <h2 id="p-name">Your Name</h2>
-        <p id="p-email"></p>
-        <p id="p-phone"></p>
-      </div>
-    </div>
-
-    <div class="invoice-row">
-      <h3>Education</h3>
-      <ul id="p-education"></ul>
-    </div>
-
-    <div class="invoice-row">
-      <h3>Experience</h3>
-      <ul id="p-experience"></ul>
-    </div>
-
-    <div class="invoice-row">
-      <h3>Skills</h3>
-      <ul id="p-skills"></ul>
-    </div>
-
-    <div class="invoice-row">
-      <h3>Projects</h3>
-      <ul id="p-projects"></ul>
-    </div>
-
-    <div class="invoice-row">
-      <h3>Certifications</h3>
-      <ul id="p-certifications"></ul>
-    </div>
-
-    <div class="progress-box">
-      <label>Resume Completion</label>
-      <div class="progress-bar">
-        <div id="progressFill"></div>
-      </div>
-    </div>
-
+<div class="invoice-header">
+  <img id="profile-pic">
+  <div>
+    <h2 id="p-name">Your Name</h2>
+    <p id="p-email"></p>
+    <p id="p-phone"></p>
   </div>
 </div>
 
-<div class="analysis-box" id="resume-analysis">
-  <h3>Resume Analysis</h3>
-  <ul id="analysis-list"></ul>
+<section>
+  <h3>Education</h3>
+  <ul id="p-education"></ul>
+</section>
+
+<section>
+  <h3>Experience</h3>
+  <ul id="p-experience"></ul>
+</section>
+
+<section>
+  <h3>Skills</h3>
+  <ul id="p-skills"></ul>
+</section>
+
+<section>
+  <h3>Projects</h3>
+  <ul id="p-projects"></ul>
+</section>
+
+<section>
+  <h3>Publications</h3>
+  <ul id="p-publications"></ul>
+</section>
+
+</div>
 </div>
 
 <script src="scriptrb.js"></script>
 </body>
 </html>
-
-
