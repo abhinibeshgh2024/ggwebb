@@ -1,249 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Webb Tab</title>
-
-<style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:"Segoe UI", sans-serif;
+.neon-navbar {
+  position: relative;
+  z-index: 1000;
 }
 
-body{
-  min-height:100vh;
-  background:linear-gradient(135deg,#0a0f2c,#1a1f4a);
-  color:#fff;
-  overflow-x:hidden;
+.dropdown {
+  position: relative;
 }
 
-/* ===== HEADER ===== */
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:16px 28px;
-  backdrop-filter:blur(14px);
-  background:rgba(255,255,255,0.08);
-  position:relative;
-  z-index:1000;
-  font-family:verdana;
+.dropdown > a {
+  display: inline-block;
+  padding: 12px 18px;
 }
 
-header img{
-  height:190px;
-  width:180px;
-  object-fit:contain;
+/* DROPDOWN MENU */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+
+  border-radius: 12px;
+  padding: 8px 0;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+
+  transition: all 0.25s ease;
+  z-index: 9999;
+
+  max-height: 280px;          /* height limit */
+  overflow-y: auto;           /* scroll enabled */
 }
 
-@media(max-width:600px){
-  header img{
-    height:180px;
-    max-width:180px;
-  }
+/* 👇 IMPORTANT PART */
+.dropdown:hover > .dropdown-menu,
+.dropdown-menu:hover {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
-/* ===== NAVBAR ===== */
-nav{
-  margin:14px auto;
-  width:92%;
-  border-radius:16px;
-  backdrop-filter:blur(14px);
-  background:rgba(255,255,255,0.10);
-  position:relative;
-  z-index:999; /* 🔥 VERY IMPORTANT */
+/* REMOVE GAP ISSUE */
+.dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 0;
+  width: 100%;
+  height: 12px;
 }
-
-.nav-links{
-  display:flex;
-  justify-content:center;
-  gap:40px;
-  list-style:none;
-  padding:14px;
-}
-
-.nav-links a{
-  text-decoration:none;
-  color:#fff;
-  font-weight:500;
-}
-
-/* ===== DROPDOWN ===== */
-.dropdown{
-  position:relative;
-}
-
-.dropdown-menu{
-  position:absolute;
-  top:38px;
-  left:0;
-  background:rgba(0,0,0,0.88);
-  backdrop-filter:blur(12px);
-  border-radius:12px;
-  list-style:none;
-  padding:8px 0;
-  display:none;
-
-  min-width:220px;
-  max-height:260px;            /* ✅ LIMIT HEIGHT */
-  overflow-y:auto;             /* ✅ SCROLL ENABLE */
-  overscroll-behavior:contain; /* ✅ MOBILE SAFE */
-
-  z-index:2000;                /* 🔥 ABOVE EVERYTHING */
-}
-
-/* Scrollbar clean */
-.dropdown-menu::-webkit-scrollbar{
-  width:6px;
-}
-.dropdown-menu::-webkit-scrollbar-thumb{
-  background:rgba(255,255,255,0.3);
-  border-radius:10px;
-}
-
-.dropdown-menu li a{
-  display:block;
-  padding:10px 18px;
-  color:#fff;
-  white-space:nowrap;
-}
-
-.dropdown-menu li a:hover{
-  background:rgba(255,255,255,0.1);
-}
-
-.dropdown:hover .dropdown-menu{
-  display:block;
-}
-
-/* Right overflow fix */
-.dropdown-menu.right-fix{
-  right:0;
-  left:auto;
-}
-
-/* ===== MAIN ===== */
-main{
-  text-align:center;
-  padding:70px 20px 30px;
-  position:relative;
-  z-index:1;
-}
-
-.page-title{
-  font-size:26px;
-  letter-spacing:2px;
-  white-space:nowrap;
-}
-
-@media(max-width:600px){
-  .page-title{font-size:22px;}
-}
-
-/* ===== ABOUT ===== */
-.about{
-  width:88%;
-  margin:50px auto;
-  padding:30px;
-  border-radius:18px;
-  backdrop-filter:blur(16px);
-  background:rgba(255,255,255,0.10);
-  position:relative;
-  z-index:1; /* 🔥 LOWER than dropdown */
-}
-
-.about h2{
-  margin-bottom:16px;
-  font-size:24px;
-}
-
-.about p{
-  font-size:16px;
-  line-height:1.7;
-}
-
-/* ===== FOOTER ===== */
-footer{
-  text-align:center;
-  padding:18px;
-  font-size:14px;
-  opacity:0.85;
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <img src="WEBB-removebg-preview.png" alt="Webb Logo">
-  <img src="UNITED_PLATFORM-removebg-preview.png" alt="United Platform Logo">
-</header>
-
-<nav>
-  <ul class="nav-links">
-
-    <li class="dropdown">
-      <a href="#">Commons ▾</a>
-      <ul class="dropdown-menu">
-        <li><a href="whiteboard.html">WhiteBoard</a></li>
-        <li><a href="indexrb.html">Resume Builder</a></li>
-        <li><a href="chart.html">Chart Maker</a></li>
-        <li><a href="filo.html">File Converter</a></li>
-        <li><a href="qr.html">QR Generator</a></li>
-        <li><a href="invoice.html">Invoice Generator</a></li>
-        <li><a href="speed.html">NetoMeter</a></li>
-      </ul>
-    </li>
-
-    <li class="dropdown">
-      <a href="#">Programming ▾</a>
-      <ul class="dropdown-menu">
-        <li><a href="codex.html">HTML / CSS</a></li>
-        <li><a href="fronto.html">HTML / CSS / JS</a></li>
-        <li><a href="#">UI / UX (Coming Soon)</a></li>
-        <li><a href="#">AI Solutions (Coming Soon)</a></li>
-      </ul>
-    </li>
-
-    <li class="dropdown">
-      <a href="#">Specials ▾</a>
-      <ul class="dropdown-menu right-fix">
-        <li><a href="unigallery.html">Art Gallery</a></li>
-      </ul>
-    </li>
-
-  </ul>
-</nav>
-
-<main>
-  <h1 class="page-title">WELCOME TO WEBB TAB</h1>
-</main>
-
-<section class="about">
-  <h2>About Webb Tab</h2>
-  <p>Webb Tab is a unified digital productivity ecosystem built to simplify how individuals and organizations access essential online utilities. Designed with a strong emphasis on clarity, performance, and usability, Webb Tab brings together multiple high-value tools into a single, well-organized interface that eliminates fragmentation and improves workflow efficiency. The platform is created to serve students, professionals, creators, and technical users who value precision, reliability, and structured digital experiences.
-
-At its core, Webb Tab focuses on practical functionality. The Commons section hosts everyday tools that address real-world needs, including a Whiteboard for visual ideation and freehand planning, a Resume Builder for crafting structured and professional resumes, a Chart Maker for generating accurate data visualizations, a File Converter to manage common document and media formats, a QR Generator for instant scannable code creation, an Invoice Generator for producing clean and professional billing documents, and NetoMeter for measuring real-time internet speed through a clear and intuitive interface.
-
-The Programming section is designed to support learning, experimentation, and development. It provides focused environments for HTML and CSS practice through Codex, extended interactive development through Fronto using JavaScript, and lays the foundation for future tools related to UI and UX design as well as AI-driven solutions. This section reflects Webb Tab’s commitment to technical growth and skill development.
-
-The Specials section showcases curated and creative utilities such as the Art Gallery, offering space for visual exploration and specialized content. Each component of Webb Tab is developed with scalability, consistency, and long-term relevance in mind.
-
-Webb Tab represents a disciplined approach to digital utility design — one platform, many tools, and a single objective: to deliver dependable, structured, and efficient solutions through a unified experience.
-  </p>
-</section>
-
-<footer>
-One Tab, Excellent Utility
-</footer>
-
-</body>
-</html>
-
-
-
-
-
