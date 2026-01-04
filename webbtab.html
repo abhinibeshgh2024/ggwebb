@@ -2,37 +2,33 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WebbTab</title>
+<title>GoGenix Webb | WebbTab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:"Segoe UI",sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 
 body{
-  min-height:100vh;
-  background:linear-gradient(135deg,#0a0f2c,#120b1f);
+  background:linear-gradient(135deg,#0b102a,#14091f);
   color:#fff;
+  min-height:100vh;
 }
 
 /* ---------- HEADER ---------- */
-.header{
-  padding:25px;
-  text-align:center;
-}
-
-.brand{
+header{
+  padding:24px 20px;
   display:flex;
+  justify-content:space-between;
   align-items:center;
-  justify-content:center;
-  gap:28px;
 }
 
-.logo{
-  width:80px;   /* bigger logos */
+header img{
+  width:90px; /* bigger logos */
   height:auto;
 }
 
@@ -42,17 +38,18 @@ body{
   justify-content:center;
   margin-top:10px;
   position:relative;
-  z-index:1000;
+  z-index:5000;
 }
 
-.nav-menu{
+.navbar ul{
   display:flex;
   gap:22px;
-  padding:14px 22px;
-  border:1px solid rgba(255,255,255,0.25);
+  padding:14px 24px;
   border-radius:30px;
   background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.25);
+  backdrop-filter:blur(12px);
+  list-style:none;
 }
 
 .nav-item{
@@ -60,16 +57,16 @@ body{
 }
 
 .nav-btn{
-  background:transparent;
+  background:none;
   border:none;
   color:#fff;
   font-size:15px;
   cursor:pointer;
-  padding:10px 16px;
+  padding:8px 14px;
 }
 
 .nav-btn:hover{
-  color:#b18cff;
+  color:#c9a4ff;
 }
 
 /* ---------- DROPDOWN ---------- */
@@ -78,13 +75,15 @@ body{
   top:130%;
   left:50%;
   transform:translateX(-50%);
-  min-width:210px;
-  background:rgba(18,10,40,0.95);
+  width:240px;
+  background:rgba(15,8,40,0.96);
   border-radius:14px;
-  padding:10px 0;
+  padding:8px 0;
   display:none;
-  z-index:3000; /* never hides */
-  box-shadow:0 12px 30px rgba(0,0,0,0.6);
+  max-height:260px;
+  overflow-y:auto;
+  box-shadow:0 15px 35px rgba(0,0,0,0.6);
+  z-index:9999;
 }
 
 .dropdown a{
@@ -99,23 +98,34 @@ body{
   background:rgba(255,255,255,0.08);
 }
 
-/* ---------- CONTENT ---------- */
-.content{
+/* smooth scrollbar */
+.dropdown::-webkit-scrollbar{
+  width:6px;
+}
+.dropdown::-webkit-scrollbar-thumb{
+  background:#6f55ff;
+  border-radius:6px;
+}
+
+/* ---------- PAGE TITLE ---------- */
+.page-title{
   text-align:center;
-  margin-top:90px;
-  padding:20px;
+  margin-top:80px;
+  font-size:26px;
   animation:fadeUp 1s ease forwards;
 }
 
 @keyframes fadeUp{
-  from{
-    opacity:0;
-    transform:translateY(25px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* ---------- FOOTER ---------- */
+footer{
+  margin-top:120px;
+  text-align:center;
+  padding:20px;
+  opacity:0.8;
 }
 </style>
 </head>
@@ -123,72 +133,71 @@ body{
 <body>
 
 <!-- HEADER -->
-<header class="header">
-  <div class="brand">
-    <img src="logo1.png" class="logo">
-    <h1>Welcome to WebbTab</h1>
-    <img src="logo2.png" class="logo">
-  </div>
+<header>
+  <img src="WEBB-removebg-preview.png" alt="Webb Logo">
+  <img src="UNITED_PLATFORM-removebg-preview.png" alt="United Platform">
 </header>
 
 <!-- NAVBAR -->
 <nav class="navbar">
-  <ul class="nav-menu">
+  <ul>
 
+    <!-- Commons -->
     <li class="nav-item">
-      <button class="nav-btn" onclick="toggleDropdown('dev')">Developer Tools</button>
-      <div class="dropdown" id="dev">
-        <a href="#">HTML Editor</a>
-        <a href="#">CSS Playground</a>
-        <a href="#">JavaScript Compiler</a>
+      <button class="nav-btn" onclick="toggle('commons')">Commons ▾</button>
+      <div class="dropdown" id="commons">
+        <a href="whiteboard.html">WhiteBoard</a>
+        <a href="indexrb.html">Resume Builder</a>
+        <a href="chart.html">Chart Maker</a>
+        <a href="filo.html">File Converter</a>
+        <a href="qr.html">QR Generator</a>
+        <a href="invoice.html">Invoice Generator</a>
+        <a href="speed.html">NetoMeter (NetSpeed Test)</a>
       </div>
     </li>
 
+    <!-- Programming -->
     <li class="nav-item">
-      <button class="nav-btn" onclick="toggleDropdown('ai')">AI Tools</button>
-      <div class="dropdown" id="ai">
-        <a href="#">Resume Analyzer</a>
-        <a href="#">AI Code Review</a>
-        <a href="#">Smart Notes</a>
+      <button class="nav-btn" onclick="toggle('programming')">Programming ▾</button>
+      <div class="dropdown" id="programming">
+        <a href="codex.html">HTML / CSS Only</a>
+        <a href="fronto.html">Fronto (HTML / CSS / JS)</a>
+        <a href="#">UI / UX Design (Coming Soon)</a>
+        <a href="#">AI Solutions (Coming Soon)</a>
       </div>
     </li>
 
+    <!-- Specials -->
     <li class="nav-item">
-      <button class="nav-btn" onclick="toggleDropdown('edu')">Education</button>
-      <div class="dropdown" id="edu">
-        <a href="#">DBMS</a>
-        <a href="#">DAA</a>
-        <a href="#">Operating Systems</a>
+      <button class="nav-btn" onclick="toggle('specials')">Specials ▾</button>
+      <div class="dropdown" id="specials">
+        <a href="unigallery.html">Art Gallery</a>
       </div>
     </li>
 
   </ul>
 </nav>
 
-<!-- CONTENT -->
-<main class="content">
-  <h2>Unified Platform for Internet Utilities</h2>
-  <p>Simple. Powerful. Discipline-driven.</p>
-</main>
+<!-- TITLE -->
+<h1 class="page-title">Welcome to Webb Tab</h1>
+
+<!-- FOOTER -->
+<footer>
+  <p>© One Tab, Excellent Utility</p>
+</footer>
 
 <script>
-function toggleDropdown(id){
-  const all=document.querySelectorAll('.dropdown');
-  all.forEach(d=>{
-    if(d.id!==id) d.style.display='none';
+function toggle(id){
+  document.querySelectorAll('.dropdown').forEach(d=>{
+    if(d.id!==id) d.style.display="none";
   });
-
-  const current=document.getElementById(id);
-  current.style.display=
-    current.style.display==='block'?'none':'block';
+  const el=document.getElementById(id);
+  el.style.display = el.style.display==="block" ? "none" : "block";
 }
 
-/* close dropdown on outside click */
-document.addEventListener('click',function(e){
-  if(!e.target.classList.contains('nav-btn')){
-    document.querySelectorAll('.dropdown').forEach(d=>{
-      d.style.display='none';
-    });
+document.addEventListener("click",e=>{
+  if(!e.target.classList.contains("nav-btn")){
+    document.querySelectorAll(".dropdown").forEach(d=>d.style.display="none");
   }
 });
 </script>
