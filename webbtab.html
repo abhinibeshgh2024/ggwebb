@@ -6,11 +6,7 @@
 <title>Webb Tab | GoGenix Webb</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family:"Segoe UI",sans-serif;
@@ -20,50 +16,41 @@ body{
   overflow-x:hidden;
 }
 
+/* ===== APPEAR ANIMATION ===== */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.appear{animation:fadeUp .75s ease forwards;opacity:0}
+.delay-1{animation-delay:.1s}
+.delay-2{animation-delay:.25s}
+.delay-3{animation-delay:.4s}
+.delay-4{animation-delay:.55s}
+.delay-5{animation-delay:.7s}
+
 /* ===== HEADER ===== */
 header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:1.2rem 2rem 0.6rem;
-  background:transparent;
+  padding:1.3rem 2rem .6rem;
 }
-
-header img{
-  height:72px;
-  width:auto;
-}
+header img{height:86px}
 
 /* ===== NAVBAR ===== */
 .neon-navbar{
-  position:relative;
-  margin:0.8rem auto 0.6rem;
+  margin:.8rem auto .6rem;
   width:fit-content;
-  padding:0.65rem 1.6rem;
+  padding:.65rem 1.6rem;
   border-radius:20px;
-  background:rgba(15,23,42,0.78);
+  background:rgba(15,23,42,.78);
   backdrop-filter:blur(14px);
-  border:1px solid rgba(148,163,184,0.25);
+  border:1px solid rgba(148,163,184,.25);
   z-index:2000;
 }
-
-.nav-links{
-  list-style:none;
-  display:flex;
-  gap:2.2rem;
-}
-
-.nav-links>li{
-  position:relative;
-}
-
-.nav-links a{
-  text-decoration:none;
-  color:#e5e7eb;
-  font-weight:600;
-  cursor:pointer;
-  white-space:nowrap;
-}
+.nav-links{list-style:none;display:flex;gap:2.2rem}
+.nav-links>li{position:relative}
+.nav-links a{color:#e5e7eb;text-decoration:none;font-weight:600;cursor:pointer}
 
 /* ===== DROPDOWN ===== */
 .dropdown-menu{
@@ -71,79 +58,73 @@ header img{
   top:125%;
   left:0;
   width:260px;
-  background:rgba(2,6,23,0.97);
-  backdrop-filter:blur(16px);
+  background:rgba(2,6,23,.97);
   border-radius:16px;
-  border:1px solid rgba(148,163,184,0.28);
-  box-shadow:0 25px 60px rgba(0,0,0,0.65);
-  padding:0.6rem 0;
+  border:1px solid rgba(148,163,184,.28);
+  padding:.6rem 0;
   display:none;
   max-height:260px;
   overflow-y:auto;
 }
-
-.dropdown.active .dropdown-menu{
-  display:block;
-}
-
-.dropdown-menu li{
-  list-style:none;
-}
-
+.dropdown.active .dropdown-menu{display:block}
 .dropdown-menu a{
   display:block;
-  padding:0.65rem 1.1rem;
-  font-size:0.95rem;
+  padding:.65rem 1.1rem;
   color:#cbd5f5;
 }
+.dropdown-menu a:hover{background:rgba(148,163,184,.12)}
 
-.dropdown-menu a:hover{
-  background:rgba(148,163,184,0.12);
-}
-
-/* scrollbar */
-.dropdown-menu::-webkit-scrollbar{
-  width:6px;
-}
-.dropdown-menu::-webkit-scrollbar-thumb{
-  background:rgba(148,163,184,0.45);
-  border-radius:10px;
-}
-.dropdown-menu{
-  scrollbar-width:thin;
-  scrollbar-color:rgba(148,163,184,0.5) transparent;
-}
-
-/* ===== SEARCH BAR ===== */
+/* ===== SEARCH ===== */
 .search-wrap{
   display:flex;
   justify-content:center;
-  margin:0.9rem 1rem 1.4rem;
+  margin:1rem;
+  position:relative;
 }
-
-.search-wrap input{
+.search-box{
   width:320px;
   max-width:90%;
-  padding:0.65rem 1.1rem;
+}
+.search-box input{
+  width:100%;
+  padding:.65rem 1.1rem;
   border-radius:999px;
-  border:1px solid rgba(148,163,184,0.25);
-  background:rgba(30,41,59,0.55);
+  border:1px solid rgba(148,163,184,.25);
+  background:rgba(30,41,59,.55);
   backdrop-filter:blur(12px);
   color:#e5e7eb;
   outline:none;
-  font-size:0.95rem;
 }
+.search-box input::placeholder{color:#94a3b8}
 
-.search-wrap input::placeholder{
-  color:#94a3b8;
+/* suggestions */
+.suggestions{
+  position:absolute;
+  top:115%;
+  width:100%;
+  background:rgba(2,6,23,.98);
+  border-radius:14px;
+  border:1px solid rgba(148,163,184,.25);
+  max-height:240px;
+  overflow-y:auto;
+  display:none;
+  z-index:3000;
+}
+.suggestions div{
+  padding:.65rem 1rem;
+  cursor:pointer;
+  color:#cbd5f5;
+}
+.suggestions div:hover,
+.suggestions .active{
+  background:rgba(148,163,184,.15);
 }
 
 /* ===== TITLE ===== */
 .page-title{
   text-align:center;
-  margin:0.6rem 1rem 1.6rem;
+  margin:.6rem 1rem 1.6rem;
   font-size:1.45rem;
-  letter-spacing:0.8px;
   color:#93c5fd;
 }
 
@@ -152,12 +133,11 @@ header img{
   max-width:900px;
   margin:auto;
   padding:2rem;
-  background:rgba(30,41,59,0.55);
+  background:rgba(30,41,59,.55);
   backdrop-filter:blur(14px);
   border-radius:20px;
-  border:1px solid rgba(148,163,184,0.2);
+  border:1px solid rgba(148,163,184,.2);
   line-height:1.75;
-  font-size:0.96rem;
 }
 
 /* ===== FOOTER ===== */
@@ -166,94 +146,113 @@ footer{
   padding:1.6rem;
   margin-top:2rem;
   color:#94a3b8;
-  font-size:0.85rem;
+  font-size:.85rem;
 }
 
-/* ===== RESPONSIVE ===== */
+/* responsive */
 @media(max-width:768px){
-  header img{height:64px;}
-  .nav-links{gap:1.6rem;}
+  header img{height:74px}
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <img src="WEBB-removebg-preview.png" alt="Webb Logo">
-  <img src="UNITED_PLATFORM-removebg-preview.png" alt="United Platform">
+<header class="appear delay-1">
+  <img src="WEBB-removebg-preview.png">
+  <img src="UNITED_PLATFORM-removebg-preview.png">
 </header>
 
-<nav class="neon-navbar">
-  <ul class="nav-links">
+<nav class="neon-navbar appear delay-2">
+<ul class="nav-links">
+  <li class="dropdown"><a onclick="toggleDropdown(event)">Commons ▾</a>
+    <ul class="dropdown-menu">
+      <li><a href="whiteboard.html">Whiteboard</a></li>
+      <li><a href="indexrb.html">Resume Builder</a></li>
+      <li><a href="chart.html">Chart Maker</a></li>
+      <li><a href="filo.html">File Converter</a></li>
+      <li><a href="qr.html">QR Generator</a></li>
+      <li><a href="invoice.html">Invoice Generator</a></li>
+      <li><a href="speed.html">NetoMeter</a></li>
+    </ul>
+  </li>
 
-    <li class="dropdown">
-      <a onclick="toggleDropdown(event)">Commons ▾</a>
-      <ul class="dropdown-menu">
-        <li><a href="whiteboard.html">Whiteboard</a></li>
-        <li><a href="indexrb.html">Resume Builder</a></li>
-        <li><a href="chart.html">Chart Maker</a></li>
-        <li><a href="filo.html">File Converter</a></li>
-        <li><a href="qr.html">QR Generator</a></li>
-        <li><a href="invoice.html">Invoice Generator</a></li>
-        <li><a href="speed.html">NetoMeter</a></li>
-      </ul>
-    </li>
+  <li class="dropdown"><a onclick="toggleDropdown(event)">Programming ▾</a>
+    <ul class="dropdown-menu">
+      <li><a href="codex.html">HTML / CSS</a></li>
+      <li><a href="fronto.html">HTML / CSS / JS</a></li>
+    </ul>
+  </li>
 
-    <li class="dropdown">
-      <a onclick="toggleDropdown(event)">Programming ▾</a>
-      <ul class="dropdown-menu">
-        <li><a href="codex.html">HTML / CSS</a></li>
-        <li><a href="fronto.html">HTML / CSS / JS</a></li>
-        <li><a href="#">UI / UX (Coming Soon)</a></li>
-        <li><a href="#">AI Solutions (Coming Soon)</a></li>
-      </ul>
-    </li>
-
-    <li class="dropdown">
-      <a onclick="toggleDropdown(event)">Specials ▾</a>
-      <ul class="dropdown-menu">
-        <li><a href="unigallery.html">Art Gallery</a></li>
-      </ul>
-    </li>
-
-  </ul>
+  <li class="dropdown"><a onclick="toggleDropdown(event)">Specials ▾</a>
+    <ul class="dropdown-menu">
+      <li><a href="unigallery.html">Art Gallery</a></li>
+    </ul>
+  </li>
+</ul>
 </nav>
 
-<div class="search-wrap">
-  <input type="text" placeholder="Search Webb">
+<!-- SEARCH -->
+<div class="search-wrap appear delay-3">
+  <div class="search-box">
+    <input id="searchInput" placeholder="Search Webb">
+    <div id="suggestions" class="suggestions"></div>
+  </div>
 </div>
 
-<h1 class="page-title">Welcome to Webb Tab</h1>
+<h1 class="page-title appear delay-4">Welcome to Webb Tab</h1>
 
-<section class="about">
-Webb Tab is a unified digital utility platform designed to deliver essential productivity, creativity, and development tools within a single structured environment. It eliminates the need to navigate across multiple fragmented services by offering a centralized workspace focused on reliability, clarity, and ease of use.  
-
-The Commons section includes tools such as a digital Whiteboard for visual ideation, a Resume Builder for professional document creation, a Chart Maker for accurate data visualization, a File Converter for everyday format handling, a QR Generator for quick scannable content creation, an Invoice Generator for structured billing, and NetoMeter for real time internet speed analysis.  
-
-The Programming section supports structured learning and hands on practice through focused HTML and CSS utilities, extended front end development environments, and future ready modules for UI design and AI powered solutions.  
-
-Specialized creative utilities such as the Art Gallery are hosted under the Specials section, offering a dedicated space for visual exploration.  
-
-Webb Tab is engineered with scalability, usability, and long term relevance in mind, making it suitable for students, professionals, and creators seeking a disciplined and dependable digital workspace.
+<section class="about appear delay-5">
+Webb Tab is a unified digital utility platform delivering productivity, creativity, and development tools within one disciplined workspace. It centralizes essential utilities such as Whiteboard, Resume Builder, Chart Maker, File Converter, QR Generator, Invoice Generator, NetoMeter, programming environments, and creative galleries, ensuring reliability, clarity, and long term usability for students, professionals, and creators.
 </section>
 
-<footer>
+<footer class="appear delay-5">
 © One Tab. Complete Utility.
 </footer>
 
 <script>
+/* ===== DROPDOWN ===== */
 function toggleDropdown(e){
   e.stopPropagation();
-  const parent=e.target.closest(".dropdown");
+  const p=e.target.closest(".dropdown");
   document.querySelectorAll(".dropdown").forEach(d=>{
-    if(d!==parent)d.classList.remove("active");
+    if(d!==p)d.classList.remove("active");
   });
-  parent.classList.toggle("active");
+  p.classList.toggle("active");
 }
-
 document.addEventListener("click",()=>{
   document.querySelectorAll(".dropdown").forEach(d=>d.classList.remove("active"));
+});
+
+/* ===== SEARCH DATA ===== */
+const tools=[
+ {name:"Whiteboard",link:"whiteboard.html"},
+ {name:"Resume Builder",link:"indexrb.html"},
+ {name:"Chart Maker",link:"chart.html"},
+ {name:"File Converter",link:"filo.html"},
+ {name:"QR Generator",link:"qr.html"},
+ {name:"Invoice Generator",link:"invoice.html"},
+ {name:"NetoMeter",link:"speed.html"},
+ {name:"HTML / CSS",link:"codex.html"},
+ {name:"HTML / CSS / JS",link:"fronto.html"},
+ {name:"Art Gallery",link:"unigallery.html"}
+];
+
+const input=document.getElementById("searchInput");
+const box=document.getElementById("suggestions");
+
+input.addEventListener("input",()=>{
+  const val=input.value.toLowerCase();
+  box.innerHTML="";
+  if(!val){box.style.display="none";return;}
+  tools.filter(t=>t.name.toLowerCase().includes(val))
+    .forEach(t=>{
+      const d=document.createElement("div");
+      d.textContent=t.name;
+      d.onclick=()=>window.location.href=t.link;
+      box.appendChild(d);
+    });
+  box.style.display=box.children.length?"block":"none";
 });
 </script>
 
