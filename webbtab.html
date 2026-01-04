@@ -10,13 +10,20 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: "Segoe UI", sans-serif;
+  font-family:"Segoe UI", sans-serif;
 }
 
 body{
   background:linear-gradient(135deg,#0b102a,#14091f);
   color:#fff;
   min-height:100vh;
+  animation:bodyFade 1.2s ease forwards;
+}
+
+/* ---------- GLOBAL ANIMATION ---------- */
+@keyframes bodyFade{
+  from{opacity:0}
+  to{opacity:1}
 }
 
 /* ---------- HEADER ---------- */
@@ -28,30 +35,41 @@ header{
 }
 
 header img{
-  width:90px; /* bigger logos */
-  height:auto;
+  width:95px;
+  animation:logoFloat 4s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-4px)}
 }
 
 /* ---------- NAVBAR ---------- */
 .navbar{
   display:flex;
   justify-content:center;
-  margin-top:10px;
-  position:relative;
+  margin-top:12px;
+  animation:navSlide 1s ease forwards;
   z-index:5000;
+}
+
+@keyframes navSlide{
+  from{opacity:0; transform:translateY(-20px)}
+  to{opacity:1; transform:translateY(0)}
 }
 
 .navbar ul{
   display:flex;
   gap:22px;
-  padding:14px 24px;
+  padding:14px 26px;
   border-radius:30px;
   background:rgba(255,255,255,0.08);
   border:1px solid rgba(255,255,255,0.25);
-  backdrop-filter:blur(12px);
+  backdrop-filter:blur(14px);
   list-style:none;
 }
 
+/* ---------- NAV BUTTON ---------- */
 .nav-item{
   position:relative;
 }
@@ -63,10 +81,12 @@ header img{
   font-size:15px;
   cursor:pointer;
   padding:8px 14px;
+  transition:color .3s ease, text-shadow .3s ease;
 }
 
 .nav-btn:hover{
   color:#c9a4ff;
+  text-shadow:0 0 12px rgba(160,120,255,.6);
 }
 
 /* ---------- DROPDOWN ---------- */
@@ -74,7 +94,7 @@ header img{
   position:absolute;
   top:130%;
   left:50%;
-  transform:translateX(-50%);
+  transform:translateX(-50%) scale(.95);
   width:240px;
   background:rgba(15,8,40,0.96);
   border-radius:14px;
@@ -82,8 +102,13 @@ header img{
   display:none;
   max-height:260px;
   overflow-y:auto;
-  box-shadow:0 15px 35px rgba(0,0,0,0.6);
-  z-index:9999;
+  box-shadow:0 18px 40px rgba(0,0,0,.65);
+  animation:dropFade .35s ease forwards;
+}
+
+@keyframes dropFade{
+  from{opacity:0; transform:translateX(-50%) scale(.92)}
+  to{opacity:1; transform:translateX(-50%) scale(1)}
 }
 
 .dropdown a{
@@ -92,57 +117,61 @@ header img{
   color:#fff;
   text-decoration:none;
   font-size:14px;
+  transition:background .25s ease, padding-left .25s ease;
 }
 
 .dropdown a:hover{
   background:rgba(255,255,255,0.08);
+  padding-left:26px;
 }
 
-/* smooth scrollbar */
-.dropdown::-webkit-scrollbar{
-  width:6px;
-}
+/* scrollbar */
+.dropdown::-webkit-scrollbar{width:6px}
 .dropdown::-webkit-scrollbar-thumb{
   background:#6f55ff;
   border-radius:6px;
 }
 
-/* ---------- PAGE TITLE ---------- */
+/* ---------- TITLE ---------- */
 .page-title{
   text-align:center;
-  margin-top:80px;
+  margin-top:90px;
   font-size:26px;
-  animation:fadeUp 1s ease forwards;
+  letter-spacing:.5px;
+  animation:titleUp 1.1s ease forwards;
 }
 
-@keyframes fadeUp{
-  from{opacity:0; transform:translateY(20px);}
-  to{opacity:1; transform:translateY(0);}
+@keyframes titleUp{
+  from{opacity:0; transform:translateY(25px)}
+  to{opacity:1; transform:translateY(0)}
 }
 
 /* ---------- FOOTER ---------- */
 footer{
   margin-top:120px;
   text-align:center;
-  padding:20px;
-  opacity:0.8;
+  padding:22px;
+  opacity:.8;
+  animation:fadeSoft 1.5s ease forwards;
+}
+
+@keyframes fadeSoft{
+  from{opacity:0}
+  to{opacity:.8}
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header>
   <img src="WEBB-removebg-preview.png" alt="Webb Logo">
   <img src="UNITED_PLATFORM-removebg-preview.png" alt="United Platform">
 </header>
 
-<!-- NAVBAR -->
 <nav class="navbar">
   <ul>
 
-    <!-- Commons -->
     <li class="nav-item">
       <button class="nav-btn" onclick="toggle('commons')">Commons ▾</button>
       <div class="dropdown" id="commons">
@@ -152,22 +181,20 @@ footer{
         <a href="filo.html">File Converter</a>
         <a href="qr.html">QR Generator</a>
         <a href="invoice.html">Invoice Generator</a>
-        <a href="speed.html">NetoMeter (NetSpeed Test)</a>
+        <a href="speed.html">NetoMeter</a>
       </div>
     </li>
 
-    <!-- Programming -->
     <li class="nav-item">
       <button class="nav-btn" onclick="toggle('programming')">Programming ▾</button>
       <div class="dropdown" id="programming">
-        <a href="codex.html">HTML / CSS Only</a>
-        <a href="fronto.html">Fronto (HTML / CSS / JS)</a>
-        <a href="#">UI / UX Design (Coming Soon)</a>
+        <a href="codex.html">HTML / CSS</a>
+        <a href="fronto.html">HTML / CSS / JS</a>
+        <a href="#">UI / UX (Coming Soon)</a>
         <a href="#">AI Solutions (Coming Soon)</a>
       </div>
     </li>
 
-    <!-- Specials -->
     <li class="nav-item">
       <button class="nav-btn" onclick="toggle('specials')">Specials ▾</button>
       <div class="dropdown" id="specials">
@@ -178,12 +205,10 @@ footer{
   </ul>
 </nav>
 
-<!-- TITLE -->
 <h1 class="page-title">Welcome to Webb Tab</h1>
 
-<!-- FOOTER -->
 <footer>
-  <p>© One Tab, Excellent Utility</p>
+  © One Tab, Complete Utility
 </footer>
 
 <script>
@@ -197,7 +222,8 @@ function toggle(id){
 
 document.addEventListener("click",e=>{
   if(!e.target.classList.contains("nav-btn")){
-    document.querySelectorAll(".dropdown").forEach(d=>d.style.display="none");
+    document.querySelectorAll(".dropdown")
+    .forEach(d=>d.style.display="none");
   }
 });
 </script>
