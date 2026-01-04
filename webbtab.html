@@ -1,55 +1,257 @@
-.neon-navbar {
-  position: relative;
-  z-index: 1000;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEBB TAB</title>
+
+<style>
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
 }
 
+/* BODY */
+body {
+    background: linear-gradient(180deg, #0a0f1f, #02040a);
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+/* HEADER / NAVBAR */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.navbar {
+    max-width: 1300px;
+    margin: auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* LOGOS */
+.logo-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo-group img {
+    height: 42px;
+    width: auto;
+}
+
+/* NAV LINKS */
+.nav-links {
+    display: flex;
+    gap: 28px;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-item button {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 6px 0;
+}
+
+/* DROPDOWN */
 .dropdown {
-  position: relative;
+    position: absolute;
+    top: 130%;
+    left: 0;
+    width: 240px;
+    background: #0e142b;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    display: none;
+    flex-direction: column;
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 10000;
 }
 
-.dropdown > a {
-  display: inline-block;
-  padding: 12px 18px;
+/* SCROLLBAR */
+.dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+.dropdown::-webkit-scrollbar-thumb {
+    background: #3c4cff;
+    border-radius: 10px;
 }
 
-/* DROPDOWN MENU */
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  min-width: 220px;
-
-  background: rgba(15, 23, 42, 0.95);
-  backdrop-filter: blur(12px);
-
-  border-radius: 12px;
-  padding: 8px 0;
-
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(8px);
-
-  transition: all 0.25s ease;
-  z-index: 9999;
-
-  max-height: 280px;          /* height limit */
-  overflow-y: auto;           /* scroll enabled */
+.dropdown a {
+    padding: 12px 14px;
+    text-decoration: none;
+    color: #dcdcff;
+    font-size: 14px;
+}
+.dropdown a:hover {
+    background: rgba(60,76,255,0.15);
 }
 
-/* 👇 IMPORTANT PART */
-.dropdown:hover > .dropdown-menu,
-.dropdown-menu:hover {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+/* ACTIVE */
+.nav-item.active .dropdown {
+    display: flex;
 }
 
-/* REMOVE GAP ISSUE */
-.dropdown-menu::before {
-  content: "";
-  position: absolute;
-  top: -12px;
-  left: 0;
-  width: 100%;
-  height: 12px;
+/* SEARCH BAR */
+.search-container {
+    margin: 26px auto 10px;
+    max-width: 720px;
+    padding: 0 20px;
 }
+
+.search-bar {
+    width: 100%;
+    padding: 16px 22px;
+    border-radius: 40px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    background: rgba(255,255,255,0.08);
+    color: #ffffff;
+    backdrop-filter: blur(8px);
+}
+
+.search-bar::placeholder {
+    color: #b9c0ff;
+}
+
+/* HERO */
+.hero {
+    text-align: center;
+    padding: 50px 20px 30px;
+}
+
+.hero h1 {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #e7ebff;
+}
+
+/* ABOUT */
+.about {
+    max-width: 1100px;
+    margin: 60px auto;
+    padding: 0 20px;
+    line-height: 1.8;
+    font-size: 15px;
+    color: #d6dbff;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 30px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 13px;
+    color: #aab0ff;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="navbar">
+
+        <div class="logo-group">
+            <img src="https://via.placeholder.com/120x40?text=Logo+1">
+            <img src="https://via.placeholder.com/120x40?text=Logo+2">
+        </div>
+
+        <nav class="nav-links">
+
+            <div class="nav-item">
+                <button onclick="toggleDropdown(this)">Tools</button>
+                <div class="dropdown">
+                    <a href="#">Speed Monitor</a>
+                    <a href="#">Security Scanner</a>
+                    <a href="#">AI Analyzer</a>
+                    <a href="#">Traffic Insights</a>
+                    <a href="#">Performance Logs</a>
+                    <a href="#">System Health</a>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <button onclick="toggleDropdown(this)">Special</button>
+                <div class="dropdown">
+                    <a href="#">Enterprise Dashboard</a>
+                    <a href="#">Advanced Metrics</a>
+                    <a href="#">Developer Console</a>
+                    <a href="#">Automation Engine</a>
+                    <a href="#">Data Vault</a>
+                    <a href="#">Custom Integrations</a>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <button onclick="toggleDropdown(this)">Support</button>
+                <div class="dropdown">
+                    <a href="#">Documentation</a>
+                    <a href="#">FAQs</a>
+                    <a href="#">Release Notes</a>
+                    <a href="#">Community</a>
+                </div>
+            </div>
+
+        </nav>
+    </div>
+</header>
+
+<div class="search-container">
+    <input class="search-bar" type="text" placeholder="Search Webb">
+</div>
+
+<section class="hero">
+    <h1>Welcome to Webb Tab</h1>
+</section>
+
+<section class="about">
+    Webb Tab is engineered as a unified, enterprise-ready digital platform designed to deliver precision monitoring, performance intelligence, and operational clarity within a single, secure interface. Built with a product-launch mindset and an evergreen architectural vision, Webb Tab integrates advanced tools that empower users to observe system behavior, analyze real-time metrics, and make informed decisions with confidence. The Tools section provides direct access to speed monitoring, security scanning, AI-driven analysis, traffic intelligence, performance logging, and overall system health visualization, ensuring complete operational awareness. The Special suite introduces enterprise-grade capabilities including advanced dashboards, automation engines, developer-focused consoles, secure data vaults, and customizable integrations, tailored for scalable and future-ready deployments. The Support area complements the ecosystem with structured documentation, frequently asked references, transparent release updates, and a collaborative community channel. Every component of Webb Tab is designed with consistency, reliability, and long-term usability in mind, making it a dependable platform for continuous growth, innovation, and professional digital operations.
+</section>
+
+<footer>
+    © 2026 WEBB TAB • All Rights Reserved
+</footer>
+
+<script>
+function toggleDropdown(btn) {
+    document.querySelectorAll('.nav-item').forEach(item => {
+        if (item.contains(btn)) {
+            item.classList.toggle('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.nav-item')) {
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    }
+});
+</script>
+
+</body>
+</html>
