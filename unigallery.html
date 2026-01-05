@@ -2,74 +2,130 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Webb | Art Gallery</title>
+<title>GoGenix Art Gallery | WebbTab</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+}
+
 body{
   background:linear-gradient(135deg,#0b102a,#14091f);
   color:#fff;
   min-height:100vh;
-  animation:bodyFade 1.2s ease forwards;
 }
 
-/* BODY FADE */
-@keyframes bodyFade{from{opacity:0} to{opacity:1}}
-
-/* HEADER */
-header.main-header{
+/* ================= HEADER ================= */
+header{
   display:flex;
   flex-direction:column;
   align-items:center;
   padding:20px;
-  background:transparent;
-  z-index:1000;
 }
 
-header.main-header img{
-  width:160px;
-  margin-bottom:12px;
+header img{
+  width:150px;
+  margin-bottom:10px;
 }
 
-header.main-header h1{
-  font-size:28px;
+header h1{
   color:#93c5fd;
-  margin-bottom:12px;
+  font-size:28px;
 }
 
-/* NAVBAR */
-.navbar{
+/* ================= TOP BAR ================= */
+.top-bar{
   display:flex;
-  gap:14px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-bottom:20px;
+  justify-content:space-between;
+  align-items:center;
+  max-width:1100px;
+  margin:15px auto;
+  padding:0 15px;
 }
 
-.navbar button{
-  padding:8px 14px;
+.menu-btn{
+  background:rgba(255,255,255,0.08);
   border:none;
-  border-radius:12px;
-  background:rgba(255,255,255,0.06);
   color:#fff;
+  padding:10px 16px;
+  border-radius:12px;
   cursor:pointer;
-  transition:0.3s ease;
   backdrop-filter:blur(12px);
 }
 
-.navbar button:hover{
-  background:rgba(139,92,246,0.4);
-  color:#fff;
+/* ================= SIDEBAR ================= */
+.sidebar{
+  position:fixed;
+  top:0;
+  left:-320px;
+  width:300px;
+  height:100%;
+  background:rgba(15,8,40,0.96);
+  backdrop-filter:blur(16px);
+  border-right:1px solid rgba(255,255,255,0.15);
+  padding:20px;
+  transition:0.4s ease;
+  z-index:2000;
 }
 
-/* SECTION */
+.sidebar.active{left:0;}
+
+.sidebar-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+
+.sidebar-header h2{
+  font-size:18px;
+  color:#93c5fd;
+}
+
+.close-btn{
+  font-size:26px;
+  cursor:pointer;
+}
+
+.sidebar input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  outline:none;
+  margin-bottom:15px;
+  background:#fff;
+  color:#000;
+}
+
+.sidebar button{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border:none;
+  border-radius:10px;
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+  cursor:pointer;
+}
+
+.sidebar button:hover{
+  background:rgba(139,92,246,0.4);
+}
+
+/* ================= SECTION ================= */
 .section{
-  max-width:1000px;
-  margin:0 auto 50px;
-  padding:20px;
-  background: rgba(255,255,255,0.06);
+  max-width:1100px;
+  margin:20px auto 60px;
+  padding:25px;
+  background:rgba(255,255,255,0.06);
   backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,0.18);
   border-radius:22px;
 }
 
@@ -77,195 +133,186 @@ header.main-header h1{
   text-align:center;
   margin-bottom:20px;
   color:#93c5fd;
-  font-size:24px;
 }
 
-/* GALLERY GRID */
+/* ================= GALLERY ================= */
 .gallery{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:15px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
 }
 
 .gallery img{
   width:100%;
   border-radius:14px;
   cursor:pointer;
-  transition:transform 0.3s ease, box-shadow 0.3s ease;
+  transition:.3s;
 }
 
 .gallery img:hover{
   transform:scale(1.05);
-  box-shadow:0 0 18px rgba(139,92,246,0.45);
+  box-shadow:0 0 18px rgba(139,92,246,.45);
 }
 
-/* MODAL */
+/* ================= MODAL ================= */
 .modal{
   position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.85);
+  inset:0;
+  background:rgba(0,0,0,.85);
   display:none;
   justify-content:center;
   align-items:center;
-  flex-direction:column;
-  z-index:2000;
-  animation:modalFade 0.3s ease forwards;
+  z-index:3000;
 }
 
-@keyframes modalFade{from{opacity:0} to{opacity:1}}
+.modal-content{
+  background:#fff;   /* WHITE OUTPUT BOX */
+  padding:20px;
+  border-radius:18px;
+  max-width:90%;
+  max-height:85%;
+  text-align:center;
+  animation:zoom .3s ease;
+}
+
+@keyframes zoom{
+  from{transform:scale(.85);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
 
 .modal img{
-  max-width:90%;
-  max-height:70%;
-  border-radius:16px;
-  margin-bottom:20px;
-  border:1px solid rgba(255,255,255,0.2);
-}
-
-.modal .modal-actions{
-  display:flex;
-  gap:15px;
-}
-
-.modal .modal-actions button{
-  padding:10px 18px;
-  border:none;
+  max-width:100%;
+  max-height:60vh;
   border-radius:12px;
-  background:rgba(255,255,255,0.06);
+}
+
+.modal-actions{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  margin-top:15px;
+}
+
+.modal-actions button{
+  padding:8px 16px;
+  border:none;
+  border-radius:10px;
+  background:#111827;
   color:#fff;
   cursor:pointer;
-  transition:0.3s ease;
-  backdrop-filter:blur(12px);
-}
-
-.modal .modal-actions button:hover{
-  background:rgba(139,92,246,0.4);
 }
 
 .modal .close{
   position:absolute;
   top:20px;
   right:30px;
-  font-size:28px;
-  cursor:pointer;
+  font-size:26px;
   color:#fff;
-  transition:color 0.3s;
+  cursor:pointer;
 }
-
-.modal .close:hover{color:#c9a4ff;}
 </style>
 </head>
+
 <body>
 
-<header class="main-header">
-  <img src="WEBB-removebg-preview.png" alt="Webb Logo">
-  <h1>Webb Art Gallery</h1>
-  <p>Get free AI-generated high quality images</p>
-  <nav class="navbar">
-    <button onclick="loadGallery('devotion')">Devotion</button>
-    <button onclick="loadGallery('nature')">Nature</button>
-    <button onclick="loadGallery('environment')">Environment</button>
-    <button onclick="loadGallery('monuments')">Monuments</button>
-  </nav>
+<header>
+  <img src="WEBB-removebg-preview.png">
+  <h1>GoGenix Art Gallery</h1>
 </header>
+
+<div class="top-bar">
+  <button class="menu-btn" onclick="openMenu()">☰ Menu</button>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h2>Gallery Menu</h2>
+    <span class="close-btn" onclick="closeMenu()">×</span>
+  </div>
+  <input type="text" id="searchBox" placeholder="Search image..." onkeyup="searchImages()">
+  <button onclick="loadGallery('devotion')">Devotion</button>
+  <button onclick="loadGallery('nature')">Nature</button>
+  <button onclick="loadGallery('environment')">Environment</button>
+  <button onclick="loadGallery('monuments')">Monuments</button>
+</div>
 
 <section class="section">
   <h2 id="sectionTitle">Devotion</h2>
   <div class="gallery" id="gallery"></div>
 </section>
 
-<!-- VIEW / DOWNLOAD MODAL -->
-<div class="modal" id="imageModal">
-  <span class="close" onclick="closeModal()">✕</span>
-  <img id="modalImg">
-  <div class="modal-actions" id="downloadOptions">
-    <button onclick="downloadImage('png')">PNG</button>
-    <button onclick="downloadImage('jpg')">JPG</button>
-    <button onclick="downloadImage('pdf')">PDF</button>
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <span class="close" onclick="closeModal()">×</span>
+  <div class="modal-content">
+    <img id="modalImg">
+    <div class="modal-actions">
+      <button onclick="downloadImg('png')">PNG</button>
+      <button onclick="downloadImg('jpg')">JPG</button>
+      <button onclick="downloadImg('pdf')">PDF</button>
+    </div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-const galleryData = {
-  devotion:[
-    'https://picsum.photos/id/1011/400/300',
-    'https://picsum.photos/id/1012/400/300',
-    'https://picsum.photos/id/1013/400/300'
-  ],
-  nature:[
-    'https://picsum.photos/id/1021/400/300',
-    'https://picsum.photos/id/1022/400/300',
-    'https://picsum.photos/id/1023/400/300'
-  ],
-  environment:[
-    'https://picsum.photos/id/1031/400/300',
-    'https://picsum.photos/id/1032/400/300',
-    'https://picsum.photos/id/1033/400/300'
-  ],
-  monuments:[
-    'https://picsum.photos/id/1041/400/300',
-    'https://picsum.photos/id/1042/400/300',
-    'https://picsum.photos/id/1043/400/300'
-  ]
+const data={
+  devotion:['https://picsum.photos/id/1011/500/350','https://picsum.photos/id/1012/500/350'],
+  nature:['https://picsum.photos/id/1021/500/350','https://picsum.photos/id/1022/500/350'],
+  environment:['https://picsum.photos/id/1031/500/350','https://picsum.photos/id/1032/500/350'],
+  monuments:['https://picsum.photos/id/1041/500/350','https://picsum.photos/id/1042/500/350']
 };
 
-const gallery = document.getElementById('gallery');
-const modal = document.getElementById('imageModal');
-const modalImg = document.getElementById('modalImg');
-let currentSrc = '';
+let current=[],currentImg="";
 
-function loadGallery(category){
-  gallery.innerHTML = '';
-  document.getElementById('sectionTitle').innerText = category.charAt(0).toUpperCase() + category.slice(1);
-  galleryData[category].forEach(src=>{
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = category;
-    img.onclick = ()=>openModal(src);
+function openMenu(){document.getElementById("sidebar").classList.add("active")}
+function closeMenu(){document.getElementById("sidebar").classList.remove("active")}
+
+function loadGallery(cat){
+  current=data[cat];
+  document.getElementById("sectionTitle").innerText=cat.toUpperCase();
+  render(current);
+  closeMenu();
+}
+
+function render(arr){
+  gallery.innerHTML="";
+  arr.forEach(src=>{
+    let img=document.createElement("img");
+    img.src=src;
+    img.onclick=()=>openModal(src);
     gallery.appendChild(img);
   });
 }
 
+function searchImages(){
+  let q=document.getElementById("searchBox").value.toLowerCase();
+  render(current.filter(i=>i.includes(q)));
+}
+
 function openModal(src){
-  currentSrc = src;
-  modal.style.display = 'flex';
-  modalImg.src = src;
+  currentImg=src;
+  modal.style.display="flex";
+  modalImg.src=src;
 }
 
-function closeModal(){
-  modal.style.display = 'none';
-  modalImg.src = '';
-}
+function closeModal(){modal.style.display="none"}
 
-function downloadImage(type){
-  if(!currentSrc) return;
-  if(type==='pdf'){
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const img = new Image();
-    img.src = currentSrc;
-    img.crossOrigin = "anonymous";
-    img.onload = ()=>{
-      const ratio = img.width/img.height;
-      const width = doc.internal.pageSize.getWidth();
-      const height = width/ratio;
-      doc.addImage(img, 'JPEG', 0, 10, width, height);
-      doc.save('image.pdf');
-    };
-  } else {
-    const link = document.createElement('a');
-    link.href = currentSrc;
-    link.download = 'image.' + type;
-    link.click();
+function downloadImg(type){
+  if(type==="pdf"){
+    const {jsPDF}=window.jspdf;
+    let doc=new jsPDF();
+    doc.addImage(currentImg,"JPEG",10,10,180,120);
+    doc.save("image.pdf");
+  }else{
+    let a=document.createElement("a");
+    a.href=currentImg;
+    a.download="image."+type;
+    a.click();
   }
 }
 
-// Load default gallery
-loadGallery('devotion');
+loadGallery("devotion");
 </script>
 
 </body>
