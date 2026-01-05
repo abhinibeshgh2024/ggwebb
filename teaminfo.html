@@ -49,9 +49,9 @@ header h2{
 .media{
   display:flex;
   align-items:center;
-  gap:22px;
+  gap:26px;
   margin:40px 0;
-  padding:18px;
+  padding:22px;
   background:rgba(255,255,255,0.06);
   backdrop-filter:blur(14px);
   border:1px solid rgba(255,255,255,0.15);
@@ -63,12 +63,14 @@ header h2{
   flex-direction:row-reverse;
 }
 
-/* ================= IMAGE ================= */
+/* ================= CIRCULAR IMAGE ================= */
 .media img{
-  width:260px;
-  height:170px;
+  width:160px;
+  height:160px;
   object-fit:cover;
-  border-radius:16px;
+  border-radius:50%;
+  border:3px solid rgba(147,197,253,0.45);
+  flex-shrink:0;
 }
 
 /* ================= TEXT ================= */
@@ -88,12 +90,6 @@ header h2{
   letter-spacing:.5px;
 }
 
-/* ================= ROLE STRIP ================= */
-.layer{
-  position:absolute;
-  opacity:0; /* kept hidden – no hover or animation */
-}
-
 /* ================= RESPONSIVE ================= */
 @media(max-width:768px){
   .media,
@@ -103,8 +99,8 @@ header h2{
   }
 
   .media img{
-    width:100%;
-    height:200px;
+    width:140px;
+    height:140px;
   }
 }
 </style>
