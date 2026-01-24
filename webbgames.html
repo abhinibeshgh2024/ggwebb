@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webb Games | Elite Gaming Hub</title>
+    <title>WebbJamm | The Genixified GameSpot</title>
     <style>
         :root {
             --primary: #38bdf8;
@@ -25,22 +25,51 @@
             overflow-x: hidden;
         }
 
-        /* NAVIGATION */
+        /* --- MODIFIED HEADER --- */
         nav {
             width: 100%;
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
+            padding: 25px 50px;
+            display: grid; /* Grid use kiya hai center alignment ke liye */
+            grid-template-columns: 1fr auto 1fr; /* Left, Center, Right */
             align-items: center;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: none; /* No border as requested */
             position: sticky;
             top: 0;
             z-index: 100;
+            background: rgba(11, 15, 26, 0.4);
         }
-        .logo-box { display: flex; align-items: center; gap: 10px; }
-        .logo-box img { width: 50px; }
-        .logo-box span { font-weight: 800; letter-spacing: 2px; color: var(--primary); }
+
+        /* Logo at Center */
+        .logo-box { 
+            grid-column: 2; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        .logo-box img { 
+            width: 60px; 
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+        .logo-box span { 
+            font-weight: 800; 
+            letter-spacing: 4px; 
+            color: var(--primary); 
+            font-size: 20px;
+        }
+
+        /* Live Clock at Right */
+        .live-clock {
+            grid-column: 3;
+            text-align: right;
+            font-family: 'Courier New', Courier, monospace; /* Digital look */
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
 
         /* HERO SECTION */
         .hero {
@@ -154,16 +183,15 @@
 <nav>
     <div class="logo-box">
         <img src="WEBB-removebg-preview.png" alt="Logo">
-        <span>WEBB GAMES</span>
+        <span>WEBBJAM</span>
     </div>
-    <div class="nav-links">
-        <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 14px;">HOME</a>
-    </div>
+    
+    <div class="live-clock" id="clock">00:00:00</div>
 </nav>
 
 <section class="hero">
     <h1>Experience the Future of Fun</h1>
-    <p>Welcome to the official Webb Games Hub. High-performance, browser-based games designed for speed and precision. No downloads, just pure gaming.</p>
+    <p>Welcome to the official Webbjam Hub. High-performance, browser-based games designed for speed and precision. No downloads, just pure gaming.</p>
 </section>
 
 <div class="games-grid">
@@ -179,7 +207,7 @@
         <span class="badge badge-soon">COMING SOON</span>
         <span class="game-icon">🐍</span>
         <h3>Snake Retro</h3>
-        <p>The legendary arcade experience is being optimized for Webb performance.</p>
+        <p>The legendary arcade experience is being optimized for Webbjam performance.</p>
         <span class="play-btn" style="background: #334155;">LOCKED</span>
     </div>
 
@@ -194,10 +222,25 @@
 
 <footer>
     <div class="footer-content">
-        <p>© 2024 Webb Gaming Diagnostics. All Rights Reserved.</p>
+        <p>© 2026 WebbJamm | GoGenix Web Services. All Rights Reserved.</p>
         <p style="margin-top: 10px; font-size: 11px;">Powered by Webb high-speed architecture.</p>
     </div>
 </footer>
+
+<script>
+    // Live Clock Function
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    // Har 1 second mein update karega
+    setInterval(updateClock, 1000);
+    updateClock(); // Initial call
+</script>
 
 </body>
 </html>
