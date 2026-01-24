@@ -103,23 +103,35 @@
             100% { transform: scale(1); }
         }
 
-        /* WINNER FLASH */
-        #winner-flash {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.5);
-            font-size: 4rem;
-            font-weight: 900;
-            color: #fff;
-            text-align: center;
-            text-shadow: 0 0 30px var(--primary);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 2000;
-            transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        #winner-flash.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+       /* WINNER FLASH WITH TRANSPARENT BLUR BG */
+#winner-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(11, 15, 26, 0.7); /* Dark Transparent */
+    backdrop-filter: blur(15px); /* Background Blur */
+    -webkit-backdrop-filter: blur(15px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 30px var(--primary);
+    z-index: 5000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: scale(0.8);
+}
+
+#winner-flash.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
 
         /* CONTROLS */
         .controls { display: none; gap: 15px; margin-top: 20px; width: 100%; max-width: 400px; }
