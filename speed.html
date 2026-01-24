@@ -3,66 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webb | Pro Speed Test</title>
+    <title>Webb | NetSpeedTest</title>
     <style>
         :root {
             --primary: #38bdf8;
-            --secondary: #818cf8;
             --bg: #0b0f1a;
+            --card-bg: rgba(255, 255, 255, 0.03);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
             min-height: 100vh;
             background: var(--bg);
             color: #fff;
             display: flex;
-            flex-direction: column; /* Taaki header top pe rahe */
+            flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            padding-top: 40px;
-            overflow-x: hidden;
+            padding-top: 50px;
         }
 
-        /* --- HEADER LOGO SECTION --- */
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            z-index: 20;
-        }
-
+        /* HEADER */
+        header { text-align: center; margin-bottom: 30px; }
         .logo-img {
-            width: 120px; /* Aap size yahan se adjust kar sakte hain */
+            width: 130px;
             height: auto;
-            display: block;
-            margin: 0 auto 10px auto;
-            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.3));
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));
         }
 
-        header h2 {
-            font-size: 18px;
-            letter-spacing: 5px;
-            color: #94a3b8;
-            font-weight: 400;
-        }
-
-        /* --- METER BOX SYSTEM --- */
-        .container {
-            width: 100%;
-            max-width: 450px;
-            padding: 20px;
-            text-align: center;
-        }
-
+        /* METER BOX */
         .meter-box {
             position: relative;
-            width: 280px;
-            height: 280px;
-            margin: 0 auto 30px;
+            width: 300px;
+            height: 300px;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-bottom: 40px;
         }
 
         .scanner {
@@ -70,88 +48,82 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 2px solid rgba(56, 189, 248, 0.1);
-            transition: 0.5s;
+            border: 2px solid rgba(255,255,255,0.05);
         }
 
+        /* Active Spinning Animation */
         .testing .scanner {
-            border-top: 3px solid var(--primary);
-            animation: spin 0.8s linear infinite;
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+            border-top: 4px solid var(--primary);
+            border-right: 4px solid transparent;
+            animation: spin 0.6s linear infinite;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
         }
 
         .pulse {
             position: absolute;
-            width: 160px;
-            height: 160px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 70%);
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            opacity: 0;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+            display: none;
         }
 
-        .testing .pulse {
-            animation: pulse-ring 1.5s ease-out infinite;
-        }
+        .testing .pulse { display: block; animation: pulse-ring 1.2s ease-out infinite; }
 
-        #speed {
-            font-size: 68px;
-            font-weight: 800;
-            background: linear-gradient(to bottom, #fff, #94a3b8);
+        .speed-text { text-align: center; z-index: 10; }
+        #speed { 
+            font-size: 80px; 
+            font-weight: 900; 
+            line-height: 1;
+            background: linear-gradient(180deg, #fff 30%, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            display: block;
-            line-height: 1;
         }
+        .unit { color: #64748b; font-weight: 600; letter-spacing: 3px; font-size: 14px; margin-top: 5px; }
 
-        .unit { color: #64748b; letter-spacing: 2px; font-size: 14px; font-weight: 600; }
-
-        /* --- STATS --- */
-        .info-grid {
+        /* STATS GRID */
+        .stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 40px;
         }
 
-        .card {
-            background: rgba(255,255,255,0.03);
+        .stat-card {
+            background: var(--card-bg);
             border: 1px solid rgba(255,255,255,0.08);
-            padding: 12px;
-            border-radius: 18px;
+            padding: 20px;
+            border-radius: 24px;
+            text-align: center;
         }
 
-        .card small { color: #64748b; text-transform: uppercase; font-size: 10px; display: block; margin-bottom: 4px; }
-        .card div { font-size: 18px; font-weight: 600; }
+        .stat-card span { display: block; color: #64748b; font-size: 11px; text-transform: uppercase; margin-bottom: 8px; }
+        .stat-card b { font-size: 22px; color: #f8fafc; }
 
-        /* --- BUTTON --- */
-        #startBtn {
+        /* BUTTON */
+        #btn {
             background: transparent;
             border: 2px solid var(--primary);
             color: var(--primary);
-            padding: 14px 60px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
+            padding: 18px 80px;
+            border-radius: 100px;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.4s;
         }
 
-        #startBtn:hover {
-            background: var(--primary);
-            color: #000;
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
-        }
+        #btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 40px rgba(56, 189, 248, 0.4); }
+        #btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-        #startBtn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        /* ANIMATIONS */
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes pulse-ring {
-            0% { transform: scale(0.8); opacity: 0; }
+        @keyframes pulse-ring { 
+            0% { transform: scale(0.7); opacity: 0; }
             50% { opacity: 1; }
-            100% { transform: scale(1.4); opacity: 0; }
+            100% { transform: scale(1.2); opacity: 0; }
         }
     </style>
 </head>
@@ -159,109 +131,125 @@
 
 <header>
     <img src="WEBB-removebg-preview.png" alt="Webb Logo" class="logo-img">
-    <h2>WEBB TEST</h2>
 </header>
 
-<div class="container">
-    <div class="meter-box" id="meterBox">
-        <div class="pulse"></div>
-        <div class="scanner"></div>
-        <div class="speed-display">
-            <span id="speed">00</span>
-            <span class="unit">Mbps</span>
-        </div>
+<div class="meter-box" id="meterBox">
+    <div class="pulse"></div>
+    <div class="scanner"></div>
+    <div class="speed-text">
+        <div id="speed">0</div>
+        <div class="unit">Mbps</div>
     </div>
-
-    <div class="info-grid">
-        <div class="card">
-            <small>Latency</small>
-            <div id="ping">--</div>
-        </div>
-        <div class="card">
-            <small>Jitter</small>
-            <div id="jitter">--</div>
-        </div>
-    </div>
-
-    <button id="startBtn" onclick="initTest()">Start Test</button>
 </div>
+
+<div class="stats">
+    <div class="stat-card">
+        <span>Ping</span>
+        <b id="ping">--</b><small style="color:#64748b"> ms</small>
+    </div>
+    <div class="stat-card">
+        <span>Jitter</span>
+        <b id="jitter">--</b><small style="color:#64748b"> ms</small>
+    </div>
+</div>
+
+<button id="btn" onclick="startHeavyTest()">Start Test</button>
 
 <script>
     const speedEl = document.getElementById('speed');
     const pingEl = document.getElementById('ping');
     const jitterEl = document.getElementById('jitter');
     const meterBox = document.getElementById('meterBox');
-    const startBtn = document.getElementById('startBtn');
+    const btn = document.getElementById('btn');
 
-    let isTesting = false;
+    let isRunning = false;
 
-    function shuffleNumbers() {
-        if(!isTesting) return;
-        let randomVal = (Math.random() * 40 + 5).toFixed(1);
-        speedEl.innerText = randomVal;
-        setTimeout(shuffleNumbers, 80);
+    // Numbers shuffle effect
+    function shuffle() {
+        if(!isRunning) return;
+        speedEl.innerText = (Math.random() * 90 + 10).toFixed(1);
+        setTimeout(shuffle, 70);
     }
 
-    async function initTest() {
-        isTesting = true;
-        startBtn.disabled = true;
+    async function startHeavyTest() {
+        isRunning = true;
+        btn.disabled = true;
+        btn.innerText = "Testing...";
         meterBox.classList.add('testing');
-        
-        pingEl.innerText = "Wait..";
-        jitterEl.innerText = "Wait..";
-        shuffleNumbers();
+        shuffle();
 
         try {
-            // Measure Latency
+            // 1. LATENCY TEST
             const pings = [];
-            for(let i=0; i<3; i++) {
+            for(let i=0; i<5; i++) {
                 const s = performance.now();
-                await fetch('https://www.google.com/favicon.ico?t=' + Math.random(), {mode:'no-cors'});
+                await fetch('https://1.1.1.1/favicon.ico?t=' + Math.random(), { mode: 'no-cors' });
                 pings.push(performance.now() - s);
             }
-            pingEl.innerText = Math.min(...pings).toFixed(0) + " ms";
-            jitterEl.innerText = Math.abs(pings[1] - pings[0]).toFixed(0) + " ms";
+            pingEl.innerText = Math.min(...pings).toFixed(0);
+            jitterEl.innerText = Math.abs(pings[2] - pings[0]).toFixed(0);
 
-            // Measure Speed
-            const testUrl = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Fronalpstock_big.jpg";
+            // 2. HEAVY DOWNLOAD (Approx 25MB+)
+            // Using Cloudflare's edge network for heavy data
+            const heavyUrl = "https://speed.cloudflare.com/__down?bytes=25000000"; 
+            
             const start = performance.now();
-            const response = await fetch(testUrl + "?t=" + Math.random());
-            const blob = await response.blob();
+            const response = await fetch(heavyUrl);
+            const reader = response.body.getReader();
+            
+            let receivedLength = 0;
+            while(true) {
+                const {done, value} = await reader.read();
+                if (done) break;
+                receivedLength += value.length;
+                // Optional: Yahan real-time progress bhi dikha sakte hain
+            }
             const end = performance.now();
 
-            const duration = (end - start) / 1000;
-            const bits = blob.size * 8;
-            const mbps = (bits / duration / (1024 * 1024)).toFixed(2);
+            // Calculation
+            const durationSec = (end - start) / 1000;
+            const bitsLoaded = receivedLength * 8;
+            const speedMbps = (bitsLoaded / durationSec / (1024 * 1024)).toFixed(2);
 
-            isTesting = false; 
+            // STOP ANIMATION
+            isRunning = false;
             meterBox.classList.remove('testing');
-            animateFinal(mbps);
+            
+            // Final count-up animation
+            animateFinal(speedMbps);
 
-        } catch (err) {
-            isTesting = false;
+        } catch (e) {
+            console.error(e);
+            isRunning = false;
             meterBox.classList.remove('testing');
             speedEl.innerText = "Error";
-            startBtn.disabled = false;
+            btn.disabled = false;
+            btn.innerText = "Try Again";
         }
     }
 
     function animateFinal(target) {
-        let current = parseFloat(speedEl.innerText);
-        const steps = 15;
-        const increment = (target - current) / steps;
-        let count = 0;
+        let current = 0;
+        const duration = 1500; // 1.5 seconds final settle
+        const start = performance.now();
 
-        const timer = setInterval(() => {
-            current += increment;
-            speedEl.innerText = current.toFixed(1);
-            count++;
-            if(count >= steps) {
-                clearInterval(timer);
+        function update(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease out function
+            const value = progress * (2 - progress) * target;
+            
+            speedEl.innerText = value.toFixed(1);
+
+            if(progress < 1) {
+                requestAnimationFrame(update);
+            } else {
                 speedEl.innerText = target;
-                startBtn.disabled = false;
-                startBtn.innerText = "Retest";
+                btn.disabled = false;
+                btn.innerText = "Restart Test";
             }
-        }, 40);
+        }
+        requestAnimationFrame(update);
     }
 </script>
 
