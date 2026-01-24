@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebbJamm | Pro Tic-Tac-Toe</title>
+    <title>WebbJamm | Elite Tic-Tac-Toe</title>
     <style>
         :root {
             --primary: #38bdf8;
@@ -23,13 +23,14 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            overflow-x: hidden;
         }
 
-        /* Header Style */
-        .game-header { text-align: center; margin-bottom: 30px; }
-        .logo-small { width: 120px; margin-bottom: 10px; filter: drop-shadow(0 0 10px var(--primary)); }
+        /* HEADER */
+        .game-header { text-align: center; margin-bottom: 20px; }
+        .logo-small { width: 140px; filter: drop-shadow(0 0 10px var(--primary)); cursor: pointer; }
 
-        /* Setup Box */
+        /* SETUP BOX */
         .setup-container {
             background: var(--card);
             border: 1px solid var(--border);
@@ -37,152 +38,191 @@
             border-radius: 20px;
             backdrop-filter: blur(10px);
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
             margin-bottom: 20px;
-            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-
-        label { display: block; margin-bottom: 8px; font-size: 13px; color: #94a3b8; text-transform: uppercase; }
+        .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        label { display: block; margin-bottom: 8px; font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
 
         select, button {
             width: 100%;
             padding: 12px;
-            border-radius: 10px;
+            border-radius: 12px;
             background: #1e293b;
             border: 1px solid var(--border);
             color: #fff;
             cursor: pointer;
             font-weight: 600;
-        }
-
-        .toss-btn {
-            background: var(--primary);
-            color: #000;
-            margin-top: 15px;
-            border: none;
             transition: 0.3s;
         }
 
-        .toss-btn:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+        select:focus { border-color: var(--primary); outline: none; }
 
-        /* Game Board */
+        .toss-btn { background: var(--primary); color: #000; border: none; margin-top: 15px; font-size: 14px; letter-spacing: 1px; }
+        .toss-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
+
+        /* GAME BOARD */
+        .board-wrapper { position: relative; margin: 20px auto; }
+
         #game-board {
             display: grid;
             gap: 10px;
-            margin: 20px 0;
-            background: rgba(0,0,0,0.2);
-            padding: 10px;
-            border-radius: 15px;
-            display: none; /* Initially hidden */
+            background: rgba(0,0,0,0.3);
+            padding: 12px;
+            border-radius: 20px;
+            display: none; /* Initial hide */
         }
 
         .cell {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             aspect-ratio: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(20px, 5vw, 40px);
+            font-size: 2.5rem;
             font-weight: 900;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .cell:hover { background: rgba(56, 189, 248, 0.1); }
-        .cell.x { color: var(--primary); text-shadow: 0 0 15px var(--primary); }
-        .cell.o { color: var(--secondary); text-shadow: 0 0 15px var(--secondary); }
+        .cell:hover { background: rgba(255,255,255,0.05); }
+        .cell.win-cell { 
+            background: rgba(56, 189, 248, 0.2); 
+            border-color: var(--primary); 
+            color: #fff !important;
+            animation: pulse 1s infinite;
+        }
 
-        .status-msg { margin: 15px 0; font-size: 18px; color: var(--primary); font-weight: bold; height: 27px; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
 
-        .back-link { margin-top: 20px; color: #94a3b8; text-decoration: none; font-size: 14px; }
+        /* WINNER FLASH */
+        #winner-flash {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            font-size: 4rem;
+            font-weight: 900;
+            color: #fff;
+            text-align: center;
+            text-shadow: 0 0 30px var(--primary);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2000;
+            transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #winner-flash.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+        /* CONTROLS */
+        .controls { display: none; gap: 15px; margin-top: 20px; width: 100%; max-width: 400px; }
+        .btn-restart { border: 1px solid var(--primary); color: var(--primary); background: transparent; }
+        .btn-restart:hover { background: var(--primary); color: #000; }
+        .btn-reset { border: 1px solid #ef4444; color: #ef4444; background: transparent; }
+        .btn-reset:hover { background: #ef4444; color: #fff; }
+
+        .status-msg { height: 40px; margin: 10px 0; font-size: 1.4rem; color: var(--primary); font-weight: 700; text-transform: uppercase; }
+
+        .back-link { 
+            margin-top: 30px; 
+            color: #64748b; 
+            text-decoration: none; 
+            font-size: 14px; 
+            transition: 0.3s;
+            font-weight: 500;
+        }
         .back-link:hover { color: var(--primary); }
     </style>
 </head>
 <body>
 
+    <div id="winner-flash">WINNER!</div>
+
     <div class="game-header">
-        <img src="N-removebg-preview.png" alt="Logo" class="logo-small">
-        <h2 style="letter-spacing: 3px;">PRO TIC-TAC-TOE</h2>
+        <a href="webbgames.html"><img src="N-removebg-preview.png" alt="Logo" class="logo-small"></a>
+        <p style="letter-spacing: 4px; font-size: 12px; color: var(--secondary); margin-top: 5px;">GENIXIFIED GAMING</p>
     </div>
 
     <div class="setup-container" id="setup">
         <div class="setup-grid">
             <div>
-                <label>Select Grid</label>
+                <label>Grid Size</label>
                 <select id="grid-size">
                     <option value="3">3 x 3 (Classic)</option>
                     <option value="4">4 x 4 (Pro)</option>
                     <option value="5">5 x 5 (Elite)</option>
-                    <option value="6">6 x 6 (God Mode)</option>
                 </select>
             </div>
             <div>
-                <label>Your Sign</label>
+                <label>Choose Sign</label>
                 <select id="player-sign">
-                    <option value="X">Player X</option>
-                    <option value="O">Player O</option>
+                    <option value="X">Sign X</option>
+                    <option value="O">Sign O</option>
                 </select>
             </div>
         </div>
-        <button class="toss-btn" onclick="startToss()">START TOSS</button>
+        <button class="toss-btn" onclick="startToss()">START TOSS & PLAY</button>
     </div>
 
-    <div class="status-msg" id="status">Configure game to start</div>
+    <div class="status-msg" id="status">Waiting for setup...</div>
 
-    <div id="game-board"></div>
+    <div class="board-wrapper">
+        <div id="game-board"></div>
+    </div>
 
-    <button id="reset-btn" onclick="location.reload()" style="max-width: 200px; display: none; background: transparent; border: 1px solid var(--primary); color: var(--primary);">RESET GAME</button>
+    <div class="controls" id="controls">
+        <button class="btn-restart" onclick="restartGrid()">RESTART GRID</button>
+        <button class="btn-reset" onclick="location.reload()">FULL RESET</button>
+    </div>
 
     <a href="webbgames.html" class="back-link">← Back to WebbJamm</a>
 
     <script>
-        let board = [];
-        let size = 3;
-        let currentPlayer = "";
-        let gameActive = false;
+        let board = [], size = 3, currentPlayer = "", gameActive = false;
 
         function startToss() {
             const status = document.getElementById('status');
-            const tossBtn = document.querySelector('.toss-btn');
-            tossBtn.disabled = true;
-            status.innerText = "Tossing coin...";
-
+            status.innerText = "TOSSING COIN...";
+            status.style.color = "var(--secondary)";
+            
             setTimeout(() => {
-                const signs = ["X", "O"];
-                currentPlayer = signs[Math.floor(Math.random() * signs.length)];
-                status.innerText = `Toss Won by: ${currentPlayer} !`;
-                
+                currentPlayer = Math.random() > 0.5 ? "X" : "O";
+                status.innerText = `WINNER: PLAYER ${currentPlayer}`;
+                status.style.color = "var(--primary)";
                 setTimeout(initGame, 1000);
-            }, 1500);
+            }, 1200);
         }
 
         function initGame() {
             size = parseInt(document.getElementById('grid-size').value);
-            const boardElement = document.getElementById('game-board');
-            const setupBox = document.getElementById('setup');
-            const status = document.getElementById('status');
-
+            const boardEl = document.getElementById('game-board');
             board = Array(size * size).fill("");
-            boardElement.style.display = "grid";
-            boardElement.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-            boardElement.style.width = size === 3 ? "320px" : (size * 70) + "px";
-            boardElement.innerHTML = "";
+            
+            boardEl.style.display = "grid";
+            boardEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+            
+            // Adjust width based on size
+            const cellSize = size === 3 ? 90 : 70;
+            boardEl.style.width = (size * cellSize) + "px";
+            boardEl.innerHTML = "";
 
             for (let i = 0; i < size * size; i++) {
                 const cell = document.createElement('div');
-                cell.classList.add('cell');
-                cell.setAttribute('data-index', i);
-                cell.addEventListener('click', () => handleMove(i));
-                boardElement.appendChild(cell);
+                cell.className = 'cell';
+                cell.onclick = () => handleMove(i);
+                boardEl.appendChild(cell);
             }
 
-            setupBox.style.display = "none";
-            document.getElementById('reset-btn').style.display = "block";
-            status.innerText = `Turn: Player ${currentPlayer}`;
+            document.getElementById('setup').style.display = "none";
+            document.getElementById('controls').style.display = "flex";
+            document.getElementById('status').innerText = `TURN: PLAYER ${currentPlayer}`;
             gameActive = true;
         }
 
@@ -190,45 +230,80 @@
             if (board[index] !== "" || !gameActive) return;
 
             board[index] = currentPlayer;
-            const cell = document.querySelectorAll('.cell')[index];
-            cell.innerText = currentPlayer;
-            cell.classList.add(currentPlayer.toLowerCase());
+            const cells = document.querySelectorAll('.cell');
+            cells[index].innerText = currentPlayer;
+            cells[index].style.color = currentPlayer === "X" ? "var(--primary)" : "var(--secondary)";
 
-            if (checkWin()) {
-                document.getElementById('status').innerText = `🏆 PLAYER ${currentPlayer} WINS!`;
+            const winData = checkWin();
+            if (winData) {
+                highlightWinner(winData);
+                showFlash(`PLAYER ${currentPlayer} WINS!`);
                 gameActive = false;
                 return;
             }
 
             if (!board.includes("")) {
-                document.getElementById('status').innerText = "🤝 IT'S A DRAW!";
+                showFlash("IT'S A DRAW!");
+                document.getElementById('status').innerText = "GAME OVER";
                 gameActive = false;
                 return;
             }
 
             currentPlayer = currentPlayer === "X" ? "O" : "X";
-            document.getElementById('status').innerText = `Turn: Player ${currentPlayer}`;
+            document.getElementById('status').innerText = `TURN: PLAYER ${currentPlayer}`;
         }
 
         function checkWin() {
-            // Horizontal & Vertical
+            const lines = [];
+            // Rows
             for (let i = 0; i < size; i++) {
-                let rowWin = true;
-                let colWin = true;
-                for (let j = 0; j < size; j++) {
-                    if (board[i * size + j] !== currentPlayer) rowWin = false;
-                    if (board[j * size + i] !== currentPlayer) colWin = false;
-                }
-                if (rowWin || colWin) return true;
+                let row = [];
+                for (let j = 0; j < size; j++) row.push(i * size + j);
+                lines.push(row);
             }
-
+            // Cols
+            for (let i = 0; i < size; i++) {
+                let col = [];
+                for (let j = 0; j < size; j++) col.push(j * size + i);
+                lines.push(col);
+            }
             // Diagonals
-            let diag1 = true, diag2 = true;
+            let d1 = [], d2 = [];
             for (let i = 0; i < size; i++) {
-                if (board[i * size + i] !== currentPlayer) diag1 = false;
-                if (board[i * size + (size - 1 - i)] !== currentPlayer) diag2 = false;
+                d1.push(i * size + i);
+                d2.push(i * size + (size - 1 - i));
             }
-            return diag1 || diag2;
+            lines.push(d1, d2);
+
+            for (let line of lines) {
+                if (line.every(idx => board[idx] === currentPlayer)) return line;
+            }
+            return null;
+        }
+
+        function highlightWinner(indices) {
+            const cells = document.querySelectorAll('.cell');
+            indices.forEach(idx => cells[idx].classList.add('win-cell'));
+            document.getElementById('status').innerText = `🏆 PLAYER ${currentPlayer} WON!`;
+        }
+
+        function showFlash(msg) {
+            const flash = document.getElementById('winner-flash');
+            flash.innerText = msg;
+            flash.classList.add('show');
+            setTimeout(() => flash.classList.remove('show'), 2500);
+        }
+
+        // RESTART GRID ONLY (Wahi se dobara shuru)
+        function restartGrid() {
+            board = Array(size * size).fill("");
+            document.querySelectorAll('.cell').forEach(c => {
+                c.innerText = "";
+                c.className = 'cell';
+                c.style.color = "#fff";
+            });
+            gameActive = true;
+            document.getElementById('status').innerText = `RESTARTED! TURN: ${currentPlayer}`;
         }
     </script>
 </body>
