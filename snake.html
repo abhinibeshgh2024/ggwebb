@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
-    <title>WebbJamm | Neon Snake Pro</title>
+    <title>WebbJamm | Snake FullScreen</title>
     <style>
         :root {
             --primary: #38bdf8;
@@ -23,80 +23,82 @@
             background: radial-gradient(circle at top right, #1e293b, #0b0f1a);
             color: #fff;
             display: flex; flex-direction: column; align-items: center;
-            overflow-x: hidden; /* Sirf horizontal scroll band hai, vertical chalu rahega adjustment ke liye */
         }
 
-        /* --- NAV & LOGO --- */
+        /* --- NAV --- */
         nav { width: 100%; padding: 20px 0; display: flex; justify-content: center; align-items: center; }
         .logo-small { width: 140px; filter: drop-shadow(0 0 10px var(--primary)); }
 
-        /* --- SETUP CONTAINER --- */
+        /* --- CONFIG BOX --- */
         .setup-container {
             background: var(--card); border: 1px solid var(--border);
             padding: 25px; border-radius: 24px; backdrop-filter: blur(15px);
-            width: 90%; max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            text-align: center; margin-top: 10px;
+            width: 90%; max-width: 400px; text-align: center;
         }
 
-        .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        label { display: block; margin-bottom: 6px; font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; }
+        .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        label { display: block; font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 5px; }
 
         select {
             width: 100%; padding: 12px; border-radius: 12px;
-            background: #1e293b; border: 1px solid var(--border);
-            color: #fff; cursor: pointer; font-weight: 600;
+            background: #1e293b; border: 1px solid var(--border); color: #fff;
         }
 
         .start-btn { 
             width: 100%; padding: 16px; background: var(--primary); 
-            color: #000; border: none; margin-top: 20px; 
-            border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.3s;
-        }
-        .start-btn:hover { transform: scale(1.02); box-shadow: 0 0 25px var(--primary); }
-
-        /* --- GAME ELEMENTS --- */
-        .status-msg { height: 40px; margin: 15px 0; font-size: 1.1rem; color: var(--primary); font-weight: 800; text-transform: uppercase; }
-
-        .board-wrapper { 
-            position: relative; border-radius: 24px;
-            overflow: hidden; background: #000;
-            padding: 5px; border: 2px solid var(--border);
-            display: none; 
+            color: #000; border: none; border-radius: 14px; font-weight: 800; cursor: pointer;
         }
 
-        canvas { display: block; border-radius: 18px; max-width: 95vw; height: auto; }
-
-        #winner-flash {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(11, 15, 26, 0.95); backdrop-filter: blur(12px);
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column; font-size: 2rem; font-weight: 900;
-            color: var(--primary); text-align: center; z-index: 100;
-            opacity: 0; pointer-events: none; transition: 0.4s; transform: scale(0.9);
+        /* --- GAME CANVAS --- */
+        #game-area {
+            display: none; /* Hidden at start */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100vh; /* Full screen height */
+            background: #000;
         }
-        #winner-flash.show { opacity: 1; transform: scale(1); pointer-events: auto; }
 
-        /* --- CONTROLS --- */
+        .board-wrapper {
+            position: relative;
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+        }
+
+        canvas { display: block; background: #000; }
+
+        /* --- SMART CONTROLS (Only for Mobile) --- */
         .controls-grid { 
-            display: none; margin-top: 20px; margin-bottom: 40px;
-            grid-template-columns: repeat(3, 70px); gap: 10px; 
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 75px);
+            gap: 12px;
         }
+
+        /* Hidden by default on PC */
+        @media (pointer: fine) {
+            .controls-grid { display: none !important; }
+        }
+
         .btn {
-            width: 70px; height: 70px; background: var(--card);
-            border: 1px solid var(--border); border-radius: 20px;
+            width: 75px; height: 75px; background: rgba(255,255,255,0.1);
+            border: 1px solid var(--border); border-radius: 50%;
             color: var(--primary); font-size: 24px;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.2s;
+            cursor: pointer;
         }
-        .btn:active { transform: scale(0.9); background: var(--primary); color: #000; }
+        .btn:active { background: var(--primary); color: #000; }
         .up { grid-column: 2; } .left { grid-column: 1; } .right { grid-column: 3; } .down { grid-column: 2; }
 
-        .back-link { margin-top: 20px; padding-bottom: 40px; color: #64748b; text-decoration: none; font-size: 12px; font-weight: 600; }
+        .score-display { position: absolute; top: 20px; font-size: 20px; font-weight: 800; color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <nav>
+    <nav id="main-nav">
         <a href="webbgames.html"><img src="N-removebg-preview.png" alt="Logo" class="logo-small"></a>
     </nav>
 
@@ -130,62 +132,71 @@
         <button class="start-btn" onclick="startGame()">START MISSION</button>
     </div>
 
-    <div class="status-msg" id="status" style="display:none">Score: 0</div>
-
-    <div class="board-wrapper" id="board-wrapper">
-        <div id="winner-flash">
-            <div id="flash-text">WASTED!</div>
-            <button class="start-btn" style="width: auto; padding: 10px 30px;" onclick="location.reload()">RETRY</button>
+    <div id="game-area">
+        <div class="score-display">SCORE: <span id="scoreText">0</span></div>
+        
+        <div class="board-wrapper">
+            <canvas id="snakeCanvas"></canvas>
         </div>
-        <canvas id="snakeCanvas" width="400" height="400"></canvas>
-    </div>
 
-    <div class="controls-grid" id="controls">
-        <div class="btn up" onclick="changeDir('UP')">▲</div>
-        <div class="btn left" onclick="changeDir('LEFT')">◀</div>
-        <div class="btn right" onclick="changeDir('RIGHT')">▶</div>
-        <div class="btn down" onclick="changeDir('DOWN')">▼</div>
+        <div class="controls-grid" id="mobile-controls">
+            <div class="btn up" onclick="changeDir('UP')">▲</div>
+            <div class="btn left" onclick="changeDir('LEFT')">◀</div>
+            <div class="btn right" onclick="changeDir('RIGHT')">▶</div>
+            <div class="btn down" onclick="changeDir('DOWN')">▼</div>
+        </div>
+        
+        <p style="margin-top: 20px; color: #444; font-size: 10px;">ESC to Exit</p>
     </div>
-
-    <a href="webbgames.html" class="back-link">← BACK TO WEBBJAMM</a>
 
     <script>
         const canvas = document.getElementById("snakeCanvas");
         const ctx = canvas.getContext("2d");
         const box = 20;
         let snake, food, d, score, gameSpeed, snakeColor, gameLoop, wallMode;
-        let isPlaying = false; // Scroll control variable
+        let isPlaying = false;
 
         function startGame() {
             gameSpeed = parseInt(document.getElementById('game-speed').value);
             snakeColor = document.getElementById('snake-color').value;
             wallMode = document.getElementById('grid-mode').value;
             
+            // UI Switch
             document.getElementById('setup').style.display = "none";
-            document.getElementById('board-wrapper').style.display = "block";
-            document.getElementById('controls').style.display = "grid";
-            document.getElementById('status').style.display = "block";
+            document.getElementById('main-nav').style.display = "none";
+            document.getElementById('game-area').style.display = "flex";
 
-            // Game Area par auto-scroll taaki user ko adjust na karna pade
-            window.scrollTo({ top: 100, behavior: 'smooth' });
+            // Screen Adjustment for Mobile/PC
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+            const canvasSize = Math.min(winW - 40, 400); // Max 400px board
+            canvas.width = canvasSize - (canvasSize % 20);
+            canvas.height = canvas.width;
 
-            isPlaying = true; // Ab arrow keys lock ho jayengi
+            // Trigger Fullscreen
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) elem.requestFullscreen();
+            
+            isPlaying = true;
             resetGame();
         }
 
         function resetGame() {
             score = 0;
             d = "RIGHT";
-            snake = [{x: 9 * box, y: 10 * box}];
+            const startX = Math.floor(canvas.width / 2 / box) * box;
+            const startY = Math.floor(canvas.height / 2 / box) * box;
+            snake = [{x: startX, y: startY}];
             spawnFood();
             if(gameLoop) clearInterval(gameLoop);
             gameLoop = setInterval(draw, gameSpeed);
         }
 
         function spawnFood() {
+            const cols = canvas.width / box;
             food = {
-                x: Math.floor(Math.random() * 19) * box,
-                y: Math.floor(Math.random() * 19) * box
+                x: Math.floor(Math.random() * (cols - 1)) * box,
+                y: Math.floor(Math.random() * (cols - 1)) * box
             };
         }
 
@@ -196,23 +207,23 @@
             if(dir == "DOWN" && d != "UP") d = "DOWN";
         }
 
-        // Logic: Agar game chalu hai (isPlaying), tabhi scroll rukega
         document.addEventListener("keydown", e => {
             const arrowKeys = [37, 38, 39, 40];
             if(isPlaying && arrowKeys.includes(e.keyCode)) {
-                e.preventDefault(); 
+                e.preventDefault(); // Lock scroll on PC
             }
-            
             if(e.keyCode == 37 && d != "RIGHT") d = "LEFT";
             if(e.keyCode == 38 && d != "DOWN") d = "UP";
             if(e.keyCode == 39 && d != "LEFT") d = "RIGHT";
             if(e.keyCode == 40 && d != "UP") d = "DOWN";
+            if(e.keyCode == 27) location.reload(); // ESC to restart
         });
 
         function draw() {
             ctx.fillStyle = "#000";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+            // Snake
             for(let i=0; i<snake.length; i++) {
                 ctx.fillStyle = (i == 0) ? snakeColor : "rgba(255,255,255,0.1)";
                 ctx.beginPath();
@@ -220,8 +231,9 @@
                 ctx.fill();
             }
 
-            ctx.shadowBlur = 15; ctx.shadowColor = "#ff4757";
+            // Food
             ctx.fillStyle = "#ff4757";
+            ctx.shadowBlur = 15; ctx.shadowColor = "#ff4757";
             ctx.beginPath();
             ctx.arc(food.x + box/2, food.y + box/2, box/3, 0, Math.PI*2);
             ctx.fill();
@@ -244,7 +256,7 @@
 
             if(snakeX == food.x && snakeY == food.y) {
                 score++;
-                document.getElementById('status').innerText = `Score: ${score}`;
+                document.getElementById('scoreText').innerText = score;
                 spawnFood();
             } else {
                 snake.pop();
@@ -254,10 +266,8 @@
 
             if(snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
                 clearInterval(gameLoop);
-                isPlaying = false; // Game over hote hi scroll phir se unlock
-                document.getElementById('winner-flash').classList.add('show');
-                document.getElementById('flash-text').innerText = `MISSION FAILED\nSCORE: ${score}`;
-                return;
+                alert("MISSION FAILED! SCORE: " + score);
+                location.reload();
             }
 
             snake.unshift(newHead);
