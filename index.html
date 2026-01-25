@@ -84,57 +84,100 @@
       .img-nav-btn img { width: 60px; height: 60px; }
       .img-nav-btn span { font-size: 12px; }
     }
-    /* Footer Specific Styling */
+/* ============================================================
+   GOGENIX WEBB - FOOTER ULTRA-MODERN STYLING
+   ============================================================ */
+
 .footer-box {
     text-align: center;
-    margin-top: 80px;
-    padding: 20px;
+    margin-top: 30px;      /* Section aur Footer ke beech ka gap kam kiya */
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+/* Footer Image (Unified Platform Logo) */
 .footer-logo-center {
     display: block;
-    margin: 0 auto 25px auto; /* Center alignment aur bottom gap */
-    width: 150px;             /* Header logo ke barabar size */
+    width: 250px;           /* Bada size (Pehle 150px tha) */
     height: auto;
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.15));
-    transition: transform 0.3s ease;
+    margin: 0 auto -10px auto; /* Niche ka gap minus mein kiya taaki text upar aaye */
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.15));
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .footer-logo-center:hover {
-    transform: scale(1.05); /* Chhota sa hover effect */
+    transform: scale(1.08); /* Hover pe halka sa zoom */
+    filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.3));
 }
 
+/* "Follow Us" Heading */
+.footer-box h4 {
+    margin: 0;             /* Har taraf se gap khatam */
+    padding: 0;
+    color: #fff;
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+/* Social Links Container */
 .social-links {
-    margin-top: 25px;
+    margin-top: 15px;      /* Text aur Links ke beech perfect gap */
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 25px;
 }
 
 .social-links a {
-    color: #fff;
+    color: #94a3b8;        /* Professional greyish color */
     text-decoration: none;
-    font-size: 15px;
-    transition: 0.3s;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.social-links a i {
+    font-size: 18px;       /* Icon ka size */
 }
 
 .social-links a:hover {
-    color: #38bdf8; /* Hover color */
+    color: #38bdf8;        /* Neon Blue color on hover */
+    transform: translateY(-3px);
 }
 
+/* Bottom Copyright Section */
 footer {
     text-align: center;
-    padding: 30px 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    margin-top: 40px;
-    color: #64748b;
-    font-size: 13px;
+    padding: 25px 0;
+    margin-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05); /* Patli subtle line */
 }
 
-/* Mobile responsive */
+footer p {
+    color: #64748b;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+/* --- MOBILE RESPONSIVE --- */
 @media (max-width: 600px) {
     .footer-logo-center {
-        width: 120px;
+        width: 180px;      /* Mobile pe size adjust kiya */
+        margin-bottom: -5px;
+    }
+    
+    .footer-box h4 {
+        font-size: 15px;
+    }
+
+    .social-links {
+        gap: 15px;
     }
 }
   </style>
@@ -226,6 +269,7 @@ footer {
 
 </body>
 </html>
+
 
 
 
