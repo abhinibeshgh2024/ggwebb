@@ -22,30 +22,63 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 15px;
             overflow-x: hidden;
         }
 
-        /* HEADER */
-        .game-header { text-align: center; margin-bottom: 20px; }
-        .logo-small { width: 130px; filter: drop-shadow(0 0 10px var(--primary)); cursor: pointer; }
+        /* --- STICKY BLURRED HEADER --- */
+        nav {
+            width: 100%;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(11, 15, 26, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .logo-small { width: 130px; filter: drop-shadow(0 0 10px var(--primary)); }
+
+        .home-link {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 13px;
+            padding: 8px 18px;
+            border: 1px solid var(--primary);
+            border-radius: 50px;
+            transition: 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .home-link:hover { 
+            background: var(--primary); 
+            color: #000; 
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
 
         /* SETUP BOX */
         .setup-container {
             background: var(--card);
             border: 1px solid var(--border);
-            padding: 20px;
+            padding: 25px;
             border-radius: 20px;
             backdrop-filter: blur(10px);
-            width: 100%;
+            width: 90%;
             max-width: 400px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
         }
 
-        .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         label { display: block; margin-bottom: 8px; font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
 
-        select, button {
+        select {
             width: 100%;
             padding: 12px;
             border-radius: 12px;
@@ -56,54 +89,69 @@
             font-weight: 600;
         }
 
-        .toss-btn { background: var(--primary); color: #000; border: none; margin-top: 15px; font-size: 14px; }
+        .toss-btn { 
+            width: 100%;
+            padding: 15px;
+            background: var(--primary); 
+            color: #000; 
+            border: none; 
+            margin-top: 20px; 
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .toss-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--primary); }
 
-        /* GAME BOARD WRAPPER (This constrains the flash) */
+        /* GAME BOARD AREA */
+        .status-msg { height: 40px; margin: 20px 0; font-size: 1.2rem; color: var(--primary); font-weight: 800; text-transform: uppercase; }
+
         .board-wrapper { 
             position: relative; 
-            margin: 20px auto; 
-            border-radius: 20px;
-            overflow: hidden; /* Important for local flash */
+            margin: 10px auto; 
+            border-radius: 24px;
+            overflow: hidden; 
+            background: rgba(255,255,255,0.02);
+            padding: 10px;
+            border: 1px solid var(--border);
         }
 
         #game-board {
-            display: grid;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
-            border-radius: 20px;
             display: none; 
+            gap: 10px;
             margin: 0 auto;
-            max-width: 95vw; /* Responsive for phone */
+            max-width: 95vw;
         }
 
         .cell {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 15px;
             aspect-ratio: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1.5rem, 8vw, 2.5rem); /* Scalable font */
+            font-size: clamp(2rem, 10vw, 3rem);
             font-weight: 900;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .cell:hover { background: rgba(255,255,255,0.08); transform: scale(0.95); }
 
-        /* WINNER FLASH (Now local to board) */
+        /* LOCAL WINNER FLASH */
         #winner-flash {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(11, 15, 26, 0.85);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(11, 15, 26, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             font-size: clamp(1.5rem, 6vw, 2.5rem);
             font-weight: 900;
             color: #fff;
@@ -112,46 +160,91 @@
             opacity: 0;
             pointer-events: none;
             transition: 0.5s ease;
-            transform: scale(0.9);
-            border-radius: 20px;
+            transform: scale(0.8);
         }
-
-        #winner-flash.show {
-            opacity: 1;
-            transform: scale(1);
-        }
+        #winner-flash.show { opacity: 1; transform: scale(1); pointer-events: auto; }
 
         .win-cell { 
-            background: rgba(56, 189, 248, 0.2) !important; 
+            background: rgba(56, 189, 248, 0.3) !important; 
             border-color: var(--primary) !important;
+            box-shadow: 0 0 20px var(--primary);
             animation: pulse 1s infinite;
         }
 
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.08); }
         }
-
-        .status-msg { height: 40px; margin: 15px 0; font-size: 1.2rem; color: var(--primary); font-weight: 700; text-align: center;}
 
         /* CONTROLS */
-        .controls { display: none; gap: 10px; width: 100%; max-width: 400px; }
-        .btn-restart { border: 1px solid var(--primary); color: var(--primary); background: transparent; }
-        .btn-reset { border: 1px solid #ef4444; color: #ef4444; background: transparent; }
+        .controls { display: none; gap: 15px; width: 90%; max-width: 400px; margin-top: 20px; }
+        .controls button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            background: transparent;
+        }
+        .btn-restart { border: 1px solid var(--primary); color: var(--primary); }
+        .btn-restart:hover { background: var(--primary); color: #000; box-shadow: 0 0 20px var(--primary); }
+        .btn-reset { border: 1px solid #ef4444; color: #ef4444; }
+        .btn-reset:hover { background: #ef4444; color: #fff; }
+
+        /* BACK LINK STYLE */
+        .back-link { 
+            margin: 40px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #64748b; 
+            text-decoration: none; 
+            font-size: 13px; 
+            font-weight: 600;
+            letter-spacing: 2px;
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+            transition: 0.4s;
+        }
+        .back-link:hover { 
+            color: var(--primary); 
+            border-color: var(--primary);
+            background: rgba(56, 189, 248, 0.05);
+            transform: translateY(-3px);
+        }
 
         @media (max-width: 480px) {
-            .cell { border-radius: 8px; }
-            #game-board { gap: 6px; padding: 8px; }
+            #game-board { gap: 8px; }
+            .cell { border-radius: 10px; }
         }
+        /* Sabhi elements se tap highlight hatane ke liye */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none; /* Long press menu bhi disable karega buttons pe */
+    outline: none; /* Focus outline bhi hatayega */
+}
+
+/* Specific cells ke liye taaki tap ekdum clean lage */
+.cell {
+    user-select: none; /* Text select nahi hoga tap karte waqt */
+    -webkit-user-select: none;
+}
     </style>
 </head>
 <body>
 
-    <div class="game-header">
-        <a href="webbgames.html"><img src="N-removebg-preview.png" alt="Logo" class="logo-small"></a>
-    </div>
+    <nav>
+        <div class="logo-box">
+            <img src="N-removebg-preview.png" alt="Logo" class="logo-small">
+        </div>
+        <a href="webbgames.html" class="home-link">🏠 HOME</a>
+    </nav>
 
     <div class="setup-container" id="setup">
+        <h2 style="margin-bottom: 20px; font-size: 18px; color: var(--secondary);">GAME SETTINGS</h2>
         <div class="setup-grid">
             <div>
                 <label>Grid Size</label>
@@ -162,37 +255,45 @@
                 </select>
             </div>
             <div>
-                <label>Sign</label>
+                <label>Choose Sign</label>
                 <select id="player-sign">
-                    <option value="X">X</option>
-                    <option value="O">O</option>
+                    <option value="X">Sign X</option>
+                    <option value="O">Sign O</option>
                 </select>
             </div>
         </div>
-        <button class="toss-btn" onclick="startToss()">TOSS & PLAY</button>
+        <button class="toss-btn" onclick="startToss()">START TOSS & PLAY</button>
     </div>
 
-    <div class="status-msg" id="status">Waiting...</div>
+    <div class="status-msg" id="status">Ready to Play?</div>
 
     <div class="board-wrapper">
-        <div id="winner-flash">WINNER!</div>
+        <div id="winner-flash">
+            <div id="flash-text">WINNER!</div>
+            <button class="toss-btn" style="width: auto; padding: 10px 30px; margin-top: 15px;" onclick="restartGrid()">PLAY AGAIN</button>
+        </div>
         <div id="game-board"></div>
     </div>
 
     <div class="controls" id="controls">
         <button class="btn-restart" onclick="restartGrid()">RESTART</button>
-        <button class="btn-reset" onclick="location.reload()">RESET ALL</button>
+        <button class="btn-reset" onclick="location.reload()">FULL RESET</button>
     </div>
+
+    <a href="webbgames.html" class="back-link">← BACK TO WEBBJAMM</a>
 
     <script>
         let board = [], size = 3, currentPlayer = "", gameActive = false;
 
         function startToss() {
             const status = document.getElementById('status');
-            status.innerText = "TOSSING...";
+            status.innerText = "COIN TOSSING...";
+            status.style.color = "var(--secondary)";
+            
             setTimeout(() => {
                 currentPlayer = Math.random() > 0.5 ? "X" : "O";
-                status.innerText = `STARTS WITH: ${currentPlayer}`;
+                status.innerText = `WINNER: PLAYER ${currentPlayer}`;
+                status.style.color = "var(--primary)";
                 setTimeout(initGame, 1000);
             }, 1000);
         }
@@ -205,9 +306,10 @@
             boardEl.style.display = "grid";
             boardEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
             
-            // Fixed width for desktop, 90vw for mobile
-            const containerWidth = window.innerWidth > 500 ? (size * 85) : (window.innerWidth * 0.9);
-            boardEl.style.width = containerWidth + "px";
+            // Dynamic sizing
+            const screenPadding = 40;
+            const availableWidth = Math.min(window.innerWidth - screenPadding, 400);
+            boardEl.style.width = availableWidth + "px";
             boardEl.innerHTML = "";
 
             for (let i = 0; i < size * size; i++) {
@@ -233,7 +335,7 @@
             const winData = checkWin();
             if (winData) {
                 highlightWinner(winData);
-                showFlash(`PLAYER ${currentPlayer}\nIS THE WINNER!`);
+                showFlash(`PLAYER ${currentPlayer}\nVICTORY!`);
                 gameActive = false;
                 return;
             }
@@ -273,11 +375,12 @@
         function highlightWinner(indices) {
             const cells = document.querySelectorAll('.cell');
             indices.forEach(idx => cells[idx].classList.add('win-cell'));
+            document.getElementById('status').innerText = "🏆 MATCH OVER";
         }
 
         function showFlash(msg) {
             const flash = document.getElementById('winner-flash');
-            flash.innerText = msg;
+            document.getElementById('flash-text').innerText = msg;
             flash.classList.add('show');
         }
 
