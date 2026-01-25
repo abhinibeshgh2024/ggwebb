@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
-    <title>WebbJamm | Snake FullScreen</title>
+    <title>WebbJamm | Snake Pro Elite</title>
     <style>
         :root {
             --primary: #38bdf8;
@@ -23,17 +23,18 @@
             background: radial-gradient(circle at top right, #1e293b, #0b0f1a);
             color: #fff;
             display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden;
         }
 
-        /* --- NAV --- */
         nav { width: 100%; padding: 20px 0; display: flex; justify-content: center; align-items: center; }
         .logo-small { width: 140px; filter: drop-shadow(0 0 10px var(--primary)); }
 
-        /* --- CONFIG BOX --- */
+        /* --- CONFIG MENU --- */
         .setup-container {
             background: var(--card); border: 1px solid var(--border);
             padding: 25px; border-radius: 24px; backdrop-filter: blur(15px);
             width: 90%; max-width: 400px; text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
         .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
@@ -42,58 +43,71 @@
         select {
             width: 100%; padding: 12px; border-radius: 12px;
             background: #1e293b; border: 1px solid var(--border); color: #fff;
+            font-weight: 600; cursor: pointer;
         }
 
         .start-btn { 
             width: 100%; padding: 16px; background: var(--primary); 
-            color: #000; border: none; border-radius: 14px; font-weight: 800; cursor: pointer;
+            color: #000; border: none; border-radius: 14px; font-weight: 800; 
+            cursor: pointer; transition: 0.3s; letter-spacing: 1px;
         }
 
-        /* --- GAME CANVAS --- */
+        /* --- GAME AREA --- */
         #game-area {
-            display: none; /* Hidden at start */
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             width: 100%;
-            height: 100vh; /* Full screen height */
+            height: 100vh;
             background: #000;
+            position: fixed; top: 0; left: 0; z-index: 1000;
+        }
+
+        /* Back Button on Canvas Area */
+        .game-nav {
+            position: absolute; top: 20px; width: 90%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1001;
+        }
+        .canvas-back {
+            color: var(--primary); text-decoration: none; font-weight: 800;
+            font-size: 12px; border: 1px solid var(--primary);
+            padding: 8px 15px; border-radius: 50px; cursor: pointer;
         }
 
         .board-wrapper {
             position: relative;
-            border: 2px solid var(--primary);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+            border: 3px solid var(--border);
+            border-radius: 20px;
+            background: #000;
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.15);
         }
 
-        canvas { display: block; background: #000; }
+        canvas { display: block; }
 
-        /* --- SMART CONTROLS (Only for Mobile) --- */
         .controls-grid { 
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: repeat(3, 75px);
-            gap: 12px;
+            margin-top: 30px; display: grid;
+            grid-template-columns: repeat(3, 75px); gap: 15px;
         }
 
-        /* Hidden by default on PC */
-        @media (pointer: fine) {
-            .controls-grid { display: none !important; }
-        }
+        @media (pointer: fine) { .controls-grid { display: none !important; } }
 
         .btn {
-            width: 75px; height: 75px; background: rgba(255,255,255,0.1);
-            border: 1px solid var(--border); border-radius: 50%;
+            width: 75px; height: 75px; background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border); border-radius: 20px;
             color: var(--primary); font-size: 24px;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
         }
-        .btn:active { background: var(--primary); color: #000; }
-        .up { grid-column: 2; } .left { grid-column: 1; } .right { grid-column: 3; } .down { grid-column: 2; }
 
-        .score-display { position: absolute; top: 20px; font-size: 20px; font-weight: 800; color: var(--primary); }
+        .score-display { font-size: 22px; font-weight: 900; color: var(--primary); }
+
+        #overlay {
+            position: absolute; inset: 0; background: rgba(11, 15, 26, 0.9);
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 10; backdrop-filter: blur(10px);
+        }
     </style>
 </head>
 <body>
@@ -116,16 +130,16 @@
             <div>
                 <label>Color</label>
                 <select id="snake-color">
-                    <option value="#38bdf8">Cyan Blue</option>
+                    <option value="#38bdf8">Cyan</option>
                     <option value="#c084fc">Purple</option>
-                    <option value="#4ade80">Neon Green</option>
+                    <option value="#4ade80">Green</option>
                 </select>
             </div>
             <div>
-                <label>Mode</label>
+                <label>Walls</label>
                 <select id="grid-mode">
-                    <option value="classic">No Walls</option>
-                    <option value="bordered">Hard Walls</option>
+                    <option value="classic">Warp</option>
+                    <option value="bordered">Hard</option>
                 </select>
             </div>
         </div>
@@ -133,62 +147,66 @@
     </div>
 
     <div id="game-area">
-        <div class="score-display">SCORE: <span id="scoreText">0</span></div>
+        <div class="game-nav">
+            <div class="canvas-back" onclick="exitToMenu()">❮ BACK</div>
+            <div class="score-display">SCORE: <span id="scoreText">0</span></div>
+            <div style="width: 60px;"></div> </div>
         
         <div class="board-wrapper">
+            <div id="overlay">
+                <h1 style="color: #ef4444; font-size: 32px; margin-bottom: 10px;">MISSION FAILED</h1>
+                <p id="finalScore" style="font-size: 20px; margin-bottom: 20px;"></p>
+                <button class="start-btn" style="width: 180px;" onclick="location.reload()">RETRY</button>
+            </div>
             <canvas id="snakeCanvas"></canvas>
         </div>
 
-        <div class="controls-grid" id="mobile-controls">
+        <div class="controls-grid">
             <div class="btn up" onclick="changeDir('UP')">▲</div>
             <div class="btn left" onclick="changeDir('LEFT')">◀</div>
             <div class="btn right" onclick="changeDir('RIGHT')">▶</div>
             <div class="btn down" onclick="changeDir('DOWN')">▼</div>
         </div>
-        
-        <p style="margin-top: 20px; color: #444; font-size: 10px;">ESC to Exit</p>
     </div>
 
     <script>
         const canvas = document.getElementById("snakeCanvas");
         const ctx = canvas.getContext("2d");
         const box = 20;
-        let snake, food, d, score, gameSpeed, snakeColor, gameLoop, wallMode;
-        let isPlaying = false;
+        let snake, food, d, score, gameSpeed, snakeColor, gameLoop, wallMode, isPlaying = false;
 
         function startGame() {
             gameSpeed = parseInt(document.getElementById('game-speed').value);
             snakeColor = document.getElementById('snake-color').value;
             wallMode = document.getElementById('grid-mode').value;
             
-            // UI Switch
             document.getElementById('setup').style.display = "none";
             document.getElementById('main-nav').style.display = "none";
             document.getElementById('game-area').style.display = "flex";
 
-            // Screen Adjustment for Mobile/PC
-            const winW = window.innerWidth;
-            const winH = window.innerHeight;
-            const canvasSize = Math.min(winW - 40, 400); // Max 400px board
-            canvas.width = canvasSize - (canvasSize % 20);
+            const size = Math.min(window.innerWidth - 30, 400);
+            canvas.width = size - (size % box);
             canvas.height = canvas.width;
 
-            // Trigger Fullscreen
             const elem = document.documentElement;
-            if (elem.requestFullscreen) elem.requestFullscreen();
+            if (elem.requestFullscreen) elem.requestFullscreen().catch(() => {});
             
             isPlaying = true;
             resetGame();
         }
 
+        function exitToMenu() {
+            clearInterval(gameLoop);
+            isPlaying = false;
+            if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+            location.reload(); // Wapas menu par bhej dega
+        }
+
         function resetGame() {
-            score = 0;
-            d = "RIGHT";
-            const startX = Math.floor(canvas.width / 2 / box) * box;
-            const startY = Math.floor(canvas.height / 2 / box) * box;
-            snake = [{x: startX, y: startY}];
+            score = 0; d = "RIGHT";
+            const mid = Math.floor((canvas.width / box) / 2) * box;
+            snake = [{x: mid, y: mid}];
             spawnFood();
-            if(gameLoop) clearInterval(gameLoop);
             gameLoop = setInterval(draw, gameSpeed);
         }
 
@@ -209,43 +227,30 @@
 
         document.addEventListener("keydown", e => {
             const arrowKeys = [37, 38, 39, 40];
-            if(isPlaying && arrowKeys.includes(e.keyCode)) {
-                e.preventDefault(); // Lock scroll on PC
-            }
+            if(isPlaying && arrowKeys.includes(e.keyCode)) e.preventDefault();
             if(e.keyCode == 37 && d != "RIGHT") d = "LEFT";
             if(e.keyCode == 38 && d != "DOWN") d = "UP";
             if(e.keyCode == 39 && d != "LEFT") d = "RIGHT";
             if(e.keyCode == 40 && d != "UP") d = "DOWN";
-            if(e.keyCode == 27) location.reload(); // ESC to restart
+            if(e.keyCode == 27) exitToMenu();
         });
 
         function draw() {
-            ctx.fillStyle = "#000";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#000"; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Snake
             for(let i=0; i<snake.length; i++) {
-                ctx.fillStyle = (i == 0) ? snakeColor : "rgba(255,255,255,0.1)";
-                ctx.beginPath();
-                ctx.roundRect(snake[i].x, snake[i].y, box-2, box-2, 5);
-                ctx.fill();
+                ctx.fillStyle = (i == 0) ? snakeColor : "rgba(255,255,255,0.15)";
+                ctx.shadowBlur = (i == 0) ? 15 : 0; ctx.shadowColor = snakeColor;
+                ctx.beginPath(); ctx.roundRect(snake[i].x, snake[i].y, box-2, box-2, 6); ctx.fill();
             }
 
-            // Food
-            ctx.fillStyle = "#ff4757";
-            ctx.shadowBlur = 15; ctx.shadowColor = "#ff4757";
-            ctx.beginPath();
-            ctx.arc(food.x + box/2, food.y + box/2, box/3, 0, Math.PI*2);
-            ctx.fill();
+            ctx.shadowBlur = 20; ctx.shadowColor = "#ff4757"; ctx.fillStyle = "#ff4757";
+            ctx.beginPath(); ctx.arc(food.x + box/2, food.y + box/2, box/3.5, 0, Math.PI*2); ctx.fill();
             ctx.shadowBlur = 0;
 
-            let snakeX = snake[0].x;
-            let snakeY = snake[0].y;
-
-            if( d == "LEFT") snakeX -= box;
-            if( d == "UP") snakeY -= box;
-            if( d == "RIGHT") snakeX += box;
-            if( d == "DOWN") snakeY += box;
+            let snakeX = snake[0].x; let snakeY = snake[0].y;
+            if( d == "LEFT") snakeX -= box; if( d == "UP") snakeY -= box;
+            if( d == "RIGHT") snakeX += box; if( d == "DOWN") snakeY += box;
 
             if(wallMode === "classic") {
                 if(snakeX < 0) snakeX = canvas.width - box;
@@ -255,21 +260,16 @@
             }
 
             if(snakeX == food.x && snakeY == food.y) {
-                score++;
-                document.getElementById('scoreText').innerText = score;
-                spawnFood();
-            } else {
-                snake.pop();
-            }
+                score++; document.getElementById('scoreText').innerText = score; spawnFood();
+            } else { snake.pop(); }
 
             let newHead = { x: snakeX, y: snakeY };
-
             if(snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
-                clearInterval(gameLoop);
-                alert("MISSION FAILED! SCORE: " + score);
-                location.reload();
+                clearInterval(gameLoop); isPlaying = false;
+                document.getElementById('overlay').style.display = "flex";
+                document.getElementById('finalScore').innerText = "SCORE: " + score;
+                return;
             }
-
             snake.unshift(newHead);
         }
 
