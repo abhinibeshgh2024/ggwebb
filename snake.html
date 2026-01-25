@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
     <title>WebbJamm | Neon Snake Pro</title>
     <style>
         :root {
@@ -13,6 +13,7 @@
             --border: rgba(255, 255, 255, 0.1);
         }
 
+        /* Reset & Scroll Fix */
         * { 
             margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent; outline: none;
@@ -23,7 +24,8 @@
             background: radial-gradient(circle at top right, #1e293b, #0b0f1a);
             color: #fff;
             display: flex; flex-direction: column; align-items: center;
-            overflow-x: hidden; user-select: none;
+            overflow: hidden; /* Screen hilna band ho jayegi */
+            touch-action: none; /* Mobile scroll fix */
         }
 
         /* --- NAV & LOGO --- */
@@ -33,7 +35,7 @@
         }
         .logo-small { width: 140px; filter: drop-shadow(0 0 10px var(--primary)); }
 
-        /* --- SETUP CONTAINER (Same as Tic-Tac-Toe) --- */
+        /* --- SETUP CONTAINER (Tic-Tac-Toe Style) --- */
         .setup-container {
             background: var(--card); border: 1px solid var(--border);
             padding: 25px; border-radius: 24px; backdrop-filter: blur(15px);
@@ -64,12 +66,12 @@
             position: relative; border-radius: 24px;
             overflow: hidden; background: #000;
             padding: 5px; border: 2px solid var(--border);
-            display: none; /* Hidden until start */
+            display: none; 
         }
 
         canvas { display: block; border-radius: 18px; max-width: 90vw; height: auto; }
 
-        /* --- FLASH OVERLAY --- */
+        /* --- GAME OVER FLASH --- */
         #winner-flash {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(11, 15, 26, 0.95); backdrop-filter: blur(12px);
@@ -82,8 +84,8 @@
 
         /* --- CONTROLS --- */
         .controls-grid { 
-            display: none; margin-top: 25px; 
-            grid-template-columns: repeat(3, 70px); gap: 12px; 
+            display: none; margin-top: 20px; 
+            grid-template-columns: repeat(3, 70px); gap: 10px; 
         }
         .btn {
             width: 70px; height: 70px; background: var(--card);
@@ -95,7 +97,7 @@
         .btn:active { transform: scale(0.9); background: var(--primary); color: #000; }
         .up { grid-column: 2; } .left { grid-column: 1; } .right { grid-column: 3; } .down { grid-column: 2; }
 
-        .back-link { margin: 30px 0; color: #64748b; text-decoration: none; font-size: 12px; font-weight: 600; }
+        .back-link { margin-top: auto; padding-bottom: 20px; color: #64748b; text-decoration: none; font-size: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -108,15 +110,15 @@
         <h2 style="font-size: 16px; color: var(--secondary); letter-spacing: 2px;">SNAKE CONFIG</h2>
         <div class="setup-grid">
             <div style="grid-column: span 2;">
-                <label>Difficulty Level</label>
+                <label>Difficulty</label>
                 <select id="game-speed">
-                    <option value="150">🐌 SLOW / ROOKIE</option>
-                    <option value="100" selected>⚡ NORMAL / PRO</option>
-                    <option value="60">🔥 FAST / LEGEND</option>
+                    <option value="150">🐌 SLOW</option>
+                    <option value="100" selected>⚡ PRO</option>
+                    <option value="60">🔥 LEGEND</option>
                 </select>
             </div>
             <div>
-                <label>Snake Color</label>
+                <label>Color</label>
                 <select id="snake-color">
                     <option value="#38bdf8">Cyan Blue</option>
                     <option value="#c084fc">Purple</option>
@@ -124,10 +126,10 @@
                 </select>
             </div>
             <div>
-                <label>Grid Mode</label>
+                <label>Mode</label>
                 <select id="grid-mode">
-                    <option value="classic">Classic</option>
-                    <option value="bordered">Bordered</option>
+                    <option value="classic">No Walls</option>
+                    <option value="bordered">Hard Walls</option>
                 </select>
             </div>
         </div>
@@ -157,14 +159,13 @@
         const canvas = document.getElementById("snakeCanvas");
         const ctx = canvas.getContext("2d");
         const box = 20;
-        let snake, food, d, score, gameSpeed, snakeColor, gameLoop;
+        let snake, food, d, score, gameSpeed, snakeColor, gameLoop, wallMode;
 
         function startGame() {
-            // Get Config
             gameSpeed = parseInt(document.getElementById('game-speed').value);
             snakeColor = document.getElementById('snake-color').value;
+            wallMode = document.getElementById('grid-mode').value;
             
-            // UI Switch
             document.getElementById('setup').style.display = "none";
             document.getElementById('board-wrapper').style.display = "block";
             document.getElementById('controls').style.display = "grid";
@@ -184,8 +185,8 @@
 
         function spawnFood() {
             food = {
-                x: Math.floor(Math.random() * 19 + 1) * box,
-                y: Math.floor(Math.random() * 19 + 1) * box
+                x: Math.floor(Math.random() * 19) * box,
+                y: Math.floor(Math.random() * 19) * box
             };
         }
 
@@ -196,8 +197,12 @@
             if(dir == "DOWN" && d != "UP") d = "DOWN";
         }
 
-        // Keyboard support
+        // SCROLL PREVENTION & Keyboard Controls
         document.addEventListener("keydown", e => {
+            const arrowKeys = [37, 38, 39, 40];
+            if(arrowKeys.includes(e.keyCode)) {
+                e.preventDefault(); // Browser scroll rok dega
+            }
             if(e.keyCode == 37 && d != "RIGHT") d = "LEFT";
             if(e.keyCode == 38 && d != "DOWN") d = "UP";
             if(e.keyCode == 39 && d != "LEFT") d = "RIGHT";
@@ -205,23 +210,20 @@
         });
 
         function draw() {
-            // Background
             ctx.fillStyle = "#000";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Snake
+            // Snake Body
             for(let i=0; i<snake.length; i++) {
-                ctx.fillStyle = (i == 0) ? snakeColor : "rgba(255,255,255,0.2)";
-                ctx.strokeStyle = "#000";
-                
-                // Rounded snake head/body
+                ctx.fillStyle = (i == 0) ? snakeColor : "rgba(255,255,255,0.1)";
+                ctx.shadowBlur = (i == 0) ? 15 : 0;
+                ctx.shadowColor = snakeColor;
                 ctx.beginPath();
-                ctx.roundRect(snake[i].x, snake[i].y, box, box, 5);
+                ctx.roundRect(snake[i].x, snake[i].y, box-2, box-2, 5);
                 ctx.fill();
-                ctx.stroke();
             }
 
-            // Food (Glow effect)
+            // Food
             ctx.shadowBlur = 15; ctx.shadowColor = "#ff4757";
             ctx.fillStyle = "#ff4757";
             ctx.beginPath();
@@ -237,6 +239,14 @@
             if( d == "RIGHT") snakeX += box;
             if( d == "DOWN") snakeY += box;
 
+            // Wall Mode Logic
+            if(wallMode === "classic") {
+                if(snakeX < 0) snakeX = canvas.width - box;
+                else if(snakeX >= canvas.width) snakeX = 0;
+                if(snakeY < 0) snakeY = canvas.height - box;
+                else if(snakeY >= canvas.height) snakeY = 0;
+            }
+
             // Collision with Food
             if(snakeX == food.x && snakeY == food.y) {
                 score++;
@@ -251,7 +261,8 @@
             // Game Over Rules
             if(snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
                 clearInterval(gameLoop);
-                showGameOver();
+                document.getElementById('winner-flash').classList.add('show');
+                document.getElementById('flash-text').innerText = `MISSION FAILED\nSCORE: ${score}`;
                 return;
             }
 
@@ -263,12 +274,6 @@
                 if(head.x == array[i].x && head.y == array[i].y) return true;
             }
             return false;
-        }
-
-        function showGameOver() {
-            const flash = document.getElementById('winner-flash');
-            document.getElementById('flash-text').innerText = `GAME OVER\nSCORE: ${score}`;
-            flash.classList.add('show');
         }
     </script>
 </body>
