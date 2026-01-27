@@ -3,212 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
-    <title>WebbJamm | Ludo Pro</title>
+    <title>WebbJamm | Ludo Elite</title>
     <style>
         :root {
             --primary: #38bdf8;
             --secondary: #c084fc;
             --bg: #0b0f1a;
             --card: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --red: #ff4757; --blue: #2e86de; --green: #2ecc71; --yellow: #f1c40f;
+            --border: rgba(255, 255, 255, 0.2);
+            --red: #ff4757; --green: #2ecc71; --blue: #2e86de; --yellow: #f1c40f;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { min-height: 100vh; background: radial-gradient(circle at top right, #1e293b, #0b0f1a); color: #fff; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { min-height: 100vh; background: #0b0f1a; color: #fff; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
 
         /* --- CONFIG MENU --- */
-        nav { width: 100%; padding: 15px 0; display: flex; justify-content: center; }
-        .logo-small { width: 120px; filter: drop-shadow(0 0 8px var(--primary)); }
-
         .setup-container {
-            background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 24px;
-            backdrop-filter: blur(15px); width: 90%; max-width: 450px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            margin-top: 50px; background: var(--card); border: 1px solid var(--border);
+            padding: 30px; border-radius: 24px; backdrop-filter: blur(15px);
+            width: 90%; max-width: 450px; text-align: center;
         }
 
-        .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
-        label { display: block; font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        select { width: 100%; padding: 10px; border-radius: 10px; background: #1e293b; border: 1px solid var(--border); color: #fff; }
+        .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        select { width: 100%; padding: 12px; border-radius: 12px; background: #1e293b; border: 1px solid var(--border); color: #fff; }
 
         .start-btn { 
-            width: 100%; padding: 14px; background: var(--primary); color: #000; border: none; 
-            border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; 
+            width: 100%; padding: 16px; background: var(--primary); color: #000; border: none; 
+            border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.3s; 
         }
-        .start-btn:hover { box-shadow: 0 0 20px var(--primary); transform: scale(1.02); }
 
-        .back-link { display: block; margin-top: 15px; color: #64748b; text-decoration: none; font-size: 12px; transition: 0.3s; }
-        .back-link:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+        /* --- GAME ENGINE --- */
+        #game-area { display: none; flex-direction: column; align-items: center; width: 100%; height: 100vh; background: #000; position: fixed; inset: 0; z-index: 1000; justify-content: center; }
+        
+        .board-wrapper { position: relative; border: 5px solid #333; border-radius: 10px; background: #fff; line-height: 0; }
+        canvas { display: block; max-width: 95vw; max-height: 75vh; cursor: pointer; }
 
-        /* --- GAME AREA --- */
-        #game-area { display: none; flex-direction: column; align-items: center; width: 100%; min-height: 100vh; background: #000; position: fixed; top: 0; left: 0; z-index: 1000; padding-top: 60px; }
-        .game-nav { position: absolute; top: 15px; width: 95%; display: flex; justify-content: space-between; align-items: center; }
-        .canvas-back { color: var(--primary); font-weight: 800; font-size: 11px; border: 1px solid var(--primary); padding: 6px 12px; border-radius: 50px; cursor: pointer; }
-
-        .board-wrapper { position: relative; border: 4px solid var(--border); border-radius: 10px; background: #fff; box-shadow: 0 0 30px rgba(56, 189, 248, 0.2); }
-        canvas { display: block; max-width: 95vw; max-height: 70vh; }
-
-        /* --- DICE AREA --- */
-        .controls { margin-top: 20px; display: flex; align-items: center; gap: 20px; }
+        /* --- DICE & UI --- */
+        .game-nav { position: absolute; top: 10px; width: 90%; display: flex; justify-content: space-between; align-items: center; }
+        .dice-box { margin-top: 20px; display: flex; align-items: center; gap: 20px; }
         .dice { 
-            width: 60px; height: 60px; background: #fff; border-radius: 12px; color: #000; 
-            font-size: 30px; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; box-shadow: 0 0 15px var(--primary); font-weight: 900;
+            width: 70px; height: 70px; background: #fff; border-radius: 15px; color: #000; 
+            font-size: 35px; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; box-shadow: 0 0 20px var(--primary); font-weight: 900;
         }
-        .turn-indicator { font-size: 14px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
+        
+        #celebration {
+            position: absolute; inset: 0; pointer-events: none;
+            background: rgba(56, 189, 248, 0.2); display: none;
+            animation: flash 0.5s infinite; z-index: 5;
+        }
 
-        #overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10; backdrop-filter: blur(5px); }
+        @keyframes flash { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
     </style>
 </head>
 <body>
 
-    <nav id="main-nav">
-        <a href="webbgames.html"><img src="N-removebg-preview.png" alt="Logo" class="logo-small"></a>
-    </nav>
-
     <div class="setup-container" id="setup">
-        <h2 style="font-size: 16px; color: var(--secondary); letter-spacing: 2px; margin-bottom: 10px;">LUDO CONFIG</h2>
+        <h2 style="color: var(--primary); letter-spacing: 2px;">LUDO ELITE CONFIG</h2>
         <div class="setup-grid">
-            <div>
-                <label>Players</label>
-                <select id="player-count">
-                    <option value="2">2 Players</option>
-                    <option value="3">3 Players</option>
-                    <option value="4" selected>4 Players</option>
-                </select>
-            </div>
-            <div>
-                <label>Opponent</label>
-                <select id="opp-type">
-                    <option value="human">VS Human</option>
-                    <option value="cpu">VS CPU</option>
-                </select>
-            </div>
-            <div>
-                <label>Mode</label>
-                <select id="game-mode">
-                    <option value="classic">Classic</option>
-                    <option value="5min">5 Minute</option>
-                </select>
-            </div>
-            <div>
-                <label>Emoji Goti</label>
-                <select id="piece-emoji">
-                    <option value="🔥">🔥 Fire</option>
-                    <option value="💎">💎 Diamond</option>
-                    <option value="👑">👑 Crown</option>
-                    <option value="👾">👾 Alien</option>
-                </select>
-            </div>
+            <div><label>Players</label><select id="pCount"><option value="2">2 Players</option><option value="4" selected>4 Players</option></select></div>
+            <div><label>Emoji</label><select id="pEmoji"><option value="🔥">🔥 Fire</option><option value="👑">👑 King</option><option value="👾">👾 Alien</option><option value="👻">👻 Ghost</option></select></div>
         </div>
-        <button class="start-btn" onclick="startGame()">START MATCH</button>
-        <a href="webbgames.html" class="back-link">← BACK TO WEBBJAMM</a>
+        <button class="start-btn" onclick="startGame()">ENTER ARENA</button>
     </div>
 
     <div id="game-area">
+        <div id="celebration"></div>
         <div class="game-nav">
-            <div class="canvas-back" onclick="location.reload()">❮ QUIT</div>
-            <div class="turn-indicator" id="turnText">RED'S TURN</div>
-            <div style="width: 40px;"></div>
+            <div id="turnIndicator" style="font-weight: 800; padding: 10px; border-radius: 8px; background: var(--red);">RED'S TURN</div>
+            <div style="color: #666; font-size: 12px;" onclick="location.reload()">EXIT</div>
         </div>
-        
+
         <div class="board-wrapper">
-            <div id="overlay">
-                <h1 id="winText" style="color: var(--primary); margin-bottom: 20px;">WINNER!</h1>
-                <button class="start-btn" style="width: 150px;" onclick="location.reload()">MAIN MENU</button>
-            </div>
             <canvas id="ludoCanvas"></canvas>
         </div>
 
-        <div class="controls">
-            <div class="dice" id="diceBtn" onclick="rollDice()">?</div>
-            <div id="diceStatus" style="font-size: 12px; color: #64748b;">Tap Dice to Roll</div>
+        <div class="dice-box">
+            <div class="dice" id="diceBtn" onclick="rollDice()">🎲</div>
+            <div id="statusText">Tap to Roll</div>
         </div>
     </div>
 
     <script>
         const canvas = document.getElementById("ludoCanvas");
         const ctx = canvas.getContext("2d");
-        const size = Math.min(window.innerWidth - 20, 500);
+        const size = 600; 
         canvas.width = size; canvas.height = size;
-        const step = size / 15;
+        const s = size / 15; // single square size
 
-        let players = [], turn = 0, diceVal = 0, canRoll = true, gameActive = false;
-        let pCount, emoji, mode;
-
-        const colors = ['#ff4757', '#2ecc71', '#2e86de', '#f1c40f']; // Red, Green, Blue, Yellow
+        let diceVal = 0, turn = 0, isRolling = false;
+        const pColors = ['#ff4757', '#2ecc71', '#2e86de', '#f1c40f'];
+        const pNames = ["RED", "GREEN", "BLUE", "YELLOW"];
+        let emoji = "🔥";
 
         function startGame() {
-            pCount = parseInt(document.getElementById('player-count').value);
-            emoji = document.getElementById('piece-emoji').value;
-            mode = document.getElementById('game-mode').value;
-            
+            emoji = document.getElementById('pEmoji').value;
             document.getElementById('setup').style.display = "none";
-            document.getElementById('main-nav').style.display = "none";
             document.getElementById('game-area').style.display = "flex";
-            
-            gameActive = true;
             drawBoard();
         }
 
         function drawBoard() {
-            ctx.clearRect(0, 0, size, size);
+            ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, size, size);
             
-            // Base Boxes
-            drawRect(0, 0, 6, 6, colors[0]); // Red
-            drawRect(9, 0, 6, 6, colors[1]); // Green
-            drawRect(0, 9, 6, 6, colors[2]); // Blue
-            drawRect(9, 9, 6, 6, colors[3]); // Yellow
-
-            // Path Draw (Simplified for UI)
-            ctx.strokeStyle = "#ddd";
-            for(let i=0; i<15; i++) {
-                for(let j=0; j<15; j++) {
-                    ctx.strokeRect(i*step, j*step, step, step);
-                }
+            // Draw Main Path Squares
+            ctx.strokeStyle = "#ccc"; ctx.lineWidth = 1;
+            for(let i=0; i<15; i++){
+                for(let j=0; j<15; j++){ ctx.strokeRect(i*s, j*s, s, s); }
             }
 
-            // Home Center
-            ctx.fillStyle = "#fff";
-            ctx.beginPath(); ctx.moveTo(6*step, 6*step); ctx.lineTo(9*step, 6*step); 
-            ctx.lineTo(7.5*step, 7.5*step); ctx.fill();
-            
-            // Draw Emoji Pieces (Static demo for UI layout)
-            ctx.font = `${step*0.8}px Arial`;
-            ctx.fillText(emoji, 1.5*step, 1.5*step);
-            ctx.fillText(emoji, 10.5*step, 1.5*step);
+            // Draw Bases
+            drawBase(0, 0, pColors[0]);    // Red
+            drawBase(9, 0, pColors[1]);    // Green
+            drawBase(0, 9, pColors[2]);    // Blue
+            drawBase(9, 9, pColors[3]);    // Yellow
+
+            // Draw Home Paths
+            for(let i=1; i<6; i++) {
+                fillCell(i, 7, pColors[0]); fillCell(7, i, pColors[1]);
+                fillCell(14-i, 7, pColors[3]); fillCell(7, 14-i, pColors[2]);
+            }
+
+            // Draw Safe Zones (Stars)
+            drawStar(1, 6); drawStar(8, 1); drawStar(13, 8); drawStar(6, 13);
+            drawStar(2, 8); drawStar(6, 2); drawStar(12, 6); drawStar(8, 12);
+
+            // Draw Central Finish
+            ctx.beginPath(); ctx.moveTo(6*s, 6*s); ctx.lineTo(9*s, 6*s); ctx.lineTo(7.5*s, 7.5*s); ctx.fillStyle = pColors[1]; ctx.fill();
+            ctx.beginPath(); ctx.moveTo(9*s, 6*s); ctx.lineTo(9*s, 9*s); ctx.lineTo(7.5*s, 7.5*s); ctx.fillStyle = pColors[3]; ctx.fill();
+            ctx.beginPath(); ctx.moveTo(9*s, 9*s); ctx.lineTo(6*s, 9*s); ctx.lineTo(7.5*s, 7.5*s); ctx.fillStyle = pColors[2]; ctx.fill();
+            ctx.beginPath(); ctx.moveTo(6*s, 9*s); ctx.lineTo(6*s, 6*s); ctx.lineTo(7.5*s, 7.5*s); ctx.fillStyle = pColors[0]; ctx.fill();
+
+            // Draw 4 Pieces in each base (Aligned)
+            drawPieces(1.5, 1.5); drawPieces(10.5, 1.5); 
+            drawPieces(1.5, 10.5); drawPieces(10.5, 10.5);
         }
 
-        function drawRect(x, y, w, h, color) {
-            ctx.fillStyle = color;
-            ctx.fillRect(x*step, y*step, w*step, h*step);
-            ctx.fillStyle = "#fff";
-            ctx.fillRect((x+1)*step, (y+1)*step, (w-2)*step, (h-2)*step);
+        function drawBase(x, y, color) {
+            ctx.fillStyle = color; ctx.fillRect(x*s, y*s, 6*s, 6*s);
+            ctx.fillStyle = "#fff"; ctx.fillRect((x+1)*s, (y+1)*s, 4*s, 4*s);
+        }
+
+        function fillCell(x, y, color) { ctx.fillStyle = color; ctx.fillRect(x*s, y*s, s, s); }
+
+        function drawStar(x, y) {
+            ctx.font = `${s*0.6}px Arial`; ctx.textAlign = "center";
+            ctx.fillText("⭐", x*s + s/2, y*s + s/1.4);
+        }
+
+        function drawPieces(bx, by) {
+            ctx.font = `${s*0.8}px Arial`;
+            // Base positions for 4 pieces
+            ctx.fillText(emoji, (bx)*s, (by)*s);
+            ctx.fillText(emoji, (bx+2)*s, (by)*s);
+            ctx.fillText(emoji, (bx)*s, (by+2)*s);
+            ctx.fillText(emoji, (bx+2)*s, (by+2)*s);
         }
 
         function rollDice() {
-            if(!canRoll) return;
-            canRoll = false;
+            if(isRolling) return;
+            isRolling = true;
             let count = 0;
-            let anim = setInterval(() => {
+            let interval = setInterval(() => {
                 diceVal = Math.floor(Math.random() * 6) + 1;
                 document.getElementById('diceBtn').innerText = diceVal;
                 count++;
                 if(count > 10) {
-                    clearInterval(anim);
-                    processTurn();
+                    clearInterval(interval);
+                    isRolling = false;
+                    checkLogic();
                 }
-            }, 50);
+            }, 60);
         }
 
-        function processTurn() {
-            // Simple turn switching for UI logic
-            setTimeout(() => {
-                turn = (turn + 1) % pCount;
-                const pNames = ["RED", "GREEN", "BLUE", "YELLOW"];
-                document.getElementById('turnText').innerText = pNames[turn] + "'S TURN";
-                document.getElementById('turnText').style.color = colors[turn];
-                canRoll = true;
-            }, 1000);
+        function checkLogic() {
+            if(diceVal === 6) {
+                document.getElementById('statusText').innerText = "LUCKY 6! Tap Goti to move";
+                flashScreen(); // Celebration flash
+            } else {
+                setTimeout(nextTurn, 1000);
+            }
+        }
+
+        function nextTurn() {
+            turn = (turn + 1) % 4;
+            const el = document.getElementById('turnIndicator');
+            el.innerText = pNames[turn] + "'S TURN";
+            el.style.background = pColors[turn];
+            document.getElementById('statusText').innerText = "Tap to Roll";
+        }
+
+        function flashScreen() {
+            const f = document.getElementById('celebration');
+            f.style.display = "block";
+            setTimeout(() => f.style.display = "none", 1000);
         }
     </script>
 </body>
