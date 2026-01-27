@@ -3,41 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
-    <title>WebbJamm | Neon Breaker Ultra</title>
+    <title>WebbJamm | Neon Breaker Multi</title>
     <style>
         :root { --primary: #38bdf8; --secondary: #c084fc; --bg: #0b0f1a; --border: rgba(255, 255, 255, 0.1); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; overflow: hidden; }
         body { background: var(--bg); color: #fff; display: flex; flex-direction: column; align-items: center; touch-action: none; }
-
         nav { width: 100%; padding: 25px 0 10px 0; display: flex; justify-content: center; }
         .logo-small { width: 150px; filter: drop-shadow(0 0 12px var(--primary)); }
-
-        .setup-container {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
-            padding: 30px; border-radius: 24px; backdrop-filter: blur(15px);
-            width: 90%; max-width: 400px; text-align: center;
-        }
-
-        .start-btn { 
-            width: 100%; padding: 16px; background: var(--primary); color: #000; 
-            border: none; border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.3s;
-        }
-
+        .setup-container { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); padding: 30px; border-radius: 24px; backdrop-filter: blur(15px); width: 90%; max-width: 400px; text-align: center; }
+        .start-btn { width: 100%; padding: 16px; background: var(--primary); color: #000; border: none; border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.3s; }
         #game-area { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100%; }
         canvas { background: #000; border: 3px solid var(--border); border-radius: 15px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
-        
         .score-ui { position: absolute; top: 20px; width: 90%; display: flex; justify-content: space-between; font-weight: 800; z-index: 10; }
     </style>
 </head>
 <body>
 
-    <nav id="main-nav">
-        <img src="N-removebg-preview.png" class="logo-small">
-    </nav>
+    <nav id="main-nav"><img src="N-removebg-preview.png" class="logo-small"></nav>
 
     <div class="setup-container" id="setup">
         <h2 style="color: var(--secondary); letter-spacing: 2px; margin-bottom: 10px;">NEON BREAKER</h2>
-        <p style="color: #64748b; font-size: 13px; margin-bottom: 25px;">Power-ups every 7 points!<br>Win to unlock next levels.</p>
+        <p style="color: #64748b; font-size: 13px; margin-bottom: 25px;">New: Multi-Ball 🏀 Power-up!<br>Clear levels to reach the top.</p>
         <button class="start-btn" onclick="startGame()">START MISSION</button>
     </div>
 
@@ -54,10 +40,11 @@
         const ctx = canvas.getContext("2d");
 
         let paddleWidth = 85, paddleHeight = 12, paddleX;
-        let ballX, ballY, dx, dy, ballRadius = 7;
+        let balls = [], ballRadius = 7;
         let bricks = [], powerups = [];
-        let score = 0, currentLevel = 1, isPlaying = false, gameState = "PLAY"; 
+        let score = 0, currentLevel = 1, gameState = "PLAY"; 
         let pointsSinceLastPowerup = 0;
+        let btnRect = { x: 0, y: 0, w: 160, h: 50 };
 
         function startGame() {
             document.getElementById('setup').style.display = "none";
@@ -65,26 +52,16 @@
             document.getElementById('game-area').style.display = "flex";
             canvas.width = Math.min(window.innerWidth - 30, 400);
             canvas.height = 500;
+            btnRect.x = canvas.width/2 - 80; btnRect.y = canvas.height/2 + 30;
             resetLevel();
             requestAnimationFrame(gameLoop);
         }
 
         function resetLevel() {
-            gameState = "PLAY";
-            paddleWidth = 85;
-            pointsSinceLastPowerup = 0;
-            powerups = [];
-            initPositions();
-            createBricks();
-            isPlaying = true;
-        }
-
-        function initPositions() {
+            gameState = "PLAY"; paddleWidth = 85; pointsSinceLastPowerup = 0; powerups = [];
             paddleX = (canvas.width - paddleWidth) / 2;
-            ballX = canvas.width / 2;
-            ballY = canvas.height - 40;
-            let speed = 3 + (currentLevel * 0.5);
-            dx = speed; dy = -speed;
+            balls = [{ x: canvas.width/2, y: canvas.height-40, dx: 4, dy: -4 }];
+            createBricks();
         }
 
         function createBricks() {
@@ -92,8 +69,7 @@
             for(let c=0; c<6; c++) {
                 bricks[c] = [];
                 for(let r=0; r<5; r++) {
-                    let s = 1;
-                    if(currentLevel === 2 && (c+r)%2 === 0) s = 0;
+                    let s = (currentLevel === 2 && (c+r)%2 === 0) ? 0 : 1;
                     if(currentLevel >= 3 && r % 2 !== 0) s = 0;
                     bricks[c][r] = { x: 0, y: 0, status: s };
                 }
@@ -101,27 +77,25 @@
         }
 
         canvas.addEventListener("click", (e) => {
-            if(gameState === "GAMEOVER") { score = 0; currentLevel = 1; resetLevel(); }
-            if(gameState === "WIN") { currentLevel++; resetLevel(); }
+            if(gameState !== "PLAY") {
+                const rect = canvas.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const clickY = e.clientY - rect.top;
+                if(clickX > btnRect.x && clickX < btnRect.x + btnRect.w && clickY > btnRect.y && clickY < btnRect.y + btnRect.h) {
+                    if(gameState === "GAMEOVER") { score = 0; currentLevel = 1; }
+                    else { currentLevel++; }
+                    resetLevel();
+                }
+            }
         });
 
-        const moveHandler = (e) => {
-            let x = e.touches ? e.touches[0].clientX : e.clientX;
-            let relX = x - canvas.offsetLeft;
-            if(relX > 0 && relX < canvas.width) paddleX = relX - paddleWidth/2;
-        };
-        window.addEventListener("mousemove", moveHandler);
-        window.addEventListener("touchmove", moveHandler);
+        window.addEventListener("mousemove", e => { if(gameState === "PLAY") { let relX = e.clientX - canvas.offsetLeft; paddleX = Math.max(0, Math.min(canvas.width - paddleWidth, relX - paddleWidth/2)); }});
+        window.addEventListener("touchmove", e => { if(gameState === "PLAY") { let relX = e.touches[0].clientX - canvas.offsetLeft; paddleX = Math.max(0, Math.min(canvas.width - paddleWidth, relX - paddleWidth/2)); }});
 
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            if(gameState === "PLAY") {
-                update();
-                draw();
-            } else {
-                drawOverlay();
-            }
+            if(gameState === "PLAY") { update(); draw(); } 
+            else { drawOverlay(); }
             requestAnimationFrame(gameLoop);
         }
 
@@ -132,76 +106,75 @@
                     let b = bricks[c][r];
                     if(b.status === 1) {
                         activeBricks++;
-                        if(ballX > b.x && ballX < b.x+58 && ballY > b.y && ballY < b.y+18) {
-                            dy = -dy; b.status = 0; score += 1;
-                            pointsSinceLastPowerup += 1;
-                            document.getElementById('scoreText').innerText = score;
-                            if(pointsSinceLastPowerup >= 7) {
-                                spawnPowerup(b.x + 29, b.y);
-                                pointsSinceLastPowerup = 0;
+                        balls.forEach(ball => {
+                            if(ball.x > b.x && ball.x < b.x+58 && ball.y > b.y && ball.y < b.y+18) {
+                                ball.dy = -ball.dy; b.status = 0; score++; pointsSinceLastPowerup++;
+                                document.getElementById('scoreText').innerText = score;
+                                if(pointsSinceLastPowerup >= 7) { spawnPowerup(b.x+29, b.y); pointsSinceLastPowerup = 0; }
                             }
-                        }
+                        });
                     }
                 }
             }
             if(activeBricks === 0) gameState = "WIN";
 
             powerups.forEach((p, i) => {
-                p.y += 2;
+                p.y += 2.5;
                 if(p.y > canvas.height-25 && p.x > paddleX && p.x < paddleX+paddleWidth) {
-                    if(p.type === 'W') paddleWidth = 150;
-                    if(p.type === 'S') { dx *= 0.6; dy *= 0.6; }
+                    if(p.type === '🏀') { // Multi-ball
+                        balls.push({x: balls[0].x, y: balls[0].y, dx: -balls[0].dx, dy: balls[0].dy});
+                        balls.push({x: balls[0].x, y: balls[0].y, dx: balls[0].dx*0.5, dy: balls[0].dy});
+                    }
+                    if(p.type === '💊') paddleWidth = 150;
+                    if(p.type === '❄️') balls.forEach(b => { b.dx *= 0.6; b.dy *= 0.6; });
                     powerups.splice(i, 1);
                 }
             });
 
-            if(ballX + dx > canvas.width-ballRadius || ballX + dx < ballRadius) dx = -dx;
-            if(ballY + dy < ballRadius) dy = -dy;
-            else if(ballY + dy > canvas.height-25) {
-                if(ballX > paddleX && ballX < paddleX + paddleWidth) dy = -dy;
-                else gameState = "GAMEOVER";
-            }
-            ballX += dx; ballY += dy;
+            balls.forEach((ball, i) => {
+                if(ball.x + ball.dx > canvas.width-ballRadius || ball.x + ball.dx < ballRadius) ball.dx = -ball.dx;
+                if(ball.y + ball.dy < ballRadius) ball.dy = -ball.dy;
+                else if(ball.y + ball.dy > canvas.height-25) {
+                    if(ball.x > paddleX && ball.x < paddleX + paddleWidth) ball.dy = -ball.dy;
+                    else { balls.splice(i, 1); }
+                }
+                ball.x += ball.dx; ball.y += ball.dy;
+            });
+            if(balls.length === 0) gameState = "GAMEOVER";
         }
 
         function spawnPowerup(x, y) {
-            let types = ['W', 'S', 'F']; // Wide, Slow, Fast
+            let types = ['💊', '❄️', '🏀'];
             powerups.push({x: x, y: y, type: types[Math.floor(Math.random()*types.length)]});
         }
 
         function draw() {
-            // Bricks
             for(let c=0; c<6; c++) {
                 for(let r=0; r<5; r++) {
                     if(bricks[c][r].status === 1) {
-                        let bx = (c * 62) + 15; let by = (r * 22) + 60;
+                        let bx = (c*62)+15, by = (r*22)+60;
                         bricks[c][r].x = bx; bricks[c][r].y = by;
                         ctx.fillStyle = r%2===0 ? "#38bdf8" : "#c084fc";
-                        ctx.beginPath(); ctx.roundRect(bx, by, 58, 18, 4); ctx.fill();
+                        ctx.beginPath(); ctx.roundRect(bx, by, 58, 18, 5); ctx.fill();
                     }
                 }
             }
-            // Powerups
-            powerups.forEach(p => {
-                ctx.font = "20px Arial";
-                let emoji = p.type === 'W' ? '💊' : (p.type === 'S' ? '❄️' : '⚡');
-                ctx.fillText(emoji, p.x, p.y);
-            });
-            // Ball & Paddle
-            ctx.beginPath(); ctx.arc(ballX, ballY, ballRadius, 0, Math.PI*2); ctx.fillStyle = "#fff"; ctx.fill();
-            ctx.fillStyle = "#38bdf8"; ctx.fillRect(paddleX, canvas.height-25, paddleWidth, paddleHeight);
+            powerups.forEach(p => { ctx.font = "24px Arial"; ctx.fillText(p.type, p.x-10, p.y); });
+            balls.forEach(ball => { ctx.beginPath(); ctx.arc(ball.x, ball.y, ballRadius, 0, Math.PI*2); ctx.fillStyle = "#fff"; ctx.fill(); });
+            ctx.fillStyle = "#38bdf8"; ctx.shadowBlur = 10; ctx.shadowColor = "#38bdf8";
+            ctx.fillRect(paddleX, canvas.height-25, paddleWidth, paddleHeight); ctx.shadowBlur = 0;
         }
 
         function drawOverlay() {
-            ctx.fillStyle = "rgba(0,0,0,0.85)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.textAlign = "center";
+            ctx.fillStyle = "rgba(11, 15, 26, 0.9)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.textAlign = "center"; ctx.fillStyle = gameState === "WIN" ? "#4ade80" : "#ef4444";
+            ctx.font = "bold 32px Inter"; ctx.fillText(gameState === "WIN" ? "LEVEL CLEARED!" : "MISSION FAILED", canvas.width/2, canvas.height/2 - 20);
+            
+            // Neon Button
+            ctx.strokeStyle = gameState === "WIN" ? "#4ade80" : "#ef4444"; ctx.lineWidth = 2;
+            ctx.strokeRect(btnRect.x, btnRect.y, btnRect.w, btnRect.h);
             ctx.fillStyle = gameState === "WIN" ? "#4ade80" : "#ef4444";
-            ctx.font = "bold 30px Inter";
-            ctx.fillText(gameState === "WIN" ? "LEVEL CLEARED!" : "MISSION FAILED", canvas.width/2, canvas.height/2 - 20);
-            ctx.fillStyle = "#fff";
-            ctx.font = "16px Inter";
-            ctx.fillText("TAP ANYWHERE TO " + (gameState === "WIN" ? "NEXT LEVEL" : "RETRY"), canvas.width/2, canvas.height/2 + 20);
+            ctx.font = "bold 18px Inter"; ctx.fillText(gameState === "WIN" ? "NEXT LEVEL" : "RETRY", canvas.width/2, btnRect.y + 32);
         }
     </script>
 </body>
